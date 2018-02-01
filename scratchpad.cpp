@@ -12,6 +12,7 @@ Scratchpad::Scratchpad()
 		_output[i] = ' ';
 	}
 	_output[44] = ']';
+	_output[45] = '\0';
 	_errstatus = false;
 	_change = false;
 	_delmode = false;

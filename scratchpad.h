@@ -12,7 +12,7 @@ private:
 	bool _errstatus;
 	bool _delmode;
 	bool _change;
-	char _output[45];
+	char _output[46];
 
 	std::string _buffer;
 

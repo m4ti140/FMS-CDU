@@ -188,6 +188,11 @@ int Page::ListIndex(int select)
 	return (select - _listStartLine) / 2 + _listPerPage * (_currpage - _listStartPage);
 }
 
+int Page::ListLSK(int index, int side)
+{
+	return ((index + _listStartLine) % _listPerPage) * 2 + side;
+}
+
 void Page::MarkList(int select, int page, int perpage)
 {
 	_listStartLine = select;
@@ -222,6 +227,131 @@ void Page::RefreshList(std::deque<std::string>data, int side, int line)
 		AddCb(callbackpos, page, functions[_listStartPage][_listStartLine * 2 + side]);
 	}
 }
+
+void LegsPage::RefreshList(const std::deque<Leg>& data)
+{
+	int page, verse, callbackpos;      //index of required screen and index of the lsk and line on that screen
+	for (int i = 0; i < data.size(); ++i)
+	{
+		page = (i + _listStartLine) / _listPerPage + _listStartPage;
+		if (page >= cont.size())
+		{
+			AddPage();
+			cont[page].LMod(_lt, cont[page - 1].LReadLine(_lt));
+		}
+		verse = ((((i + _listStartLine) % _listPerPage) + 1) * 2);
+		callbackpos = (((i + _listStartLine + 1) % _listPerPage) * 2);
+		//cont[page].RMod(verse, data[i]);
+		cont[page].LMod(verse, data[i].waypoint.id);	//update id
+
+		std::ostringstream buff;
+
+		buff << data[i].elevation<< "/" << data[i].restriction;  //update restrictions
+
+		cont[page].LMod(verse, buff.str());   
+
+		buff.clear();
+
+		buff << data[i].heading;        //update heading
+
+		cont[page].LMod(verse - 1, buff.str());
+
+		buff.clear();
+
+		buff << data[i].distance;		//update distance
+
+		cont[page].RMod(verse - 1, buff.str());
+		if (callbackpos < 2)
+		{
+			page++;
+			if (page >= cont.size())
+			{
+				AddPage();
+				cont[page].LMod(_lt, cont[page - 1].LReadLine(_lt));
+			}
+		}
+		AddCb(callbackpos, page, functions[_listStartPage][_listStartLine * 2]);
+	}
+}
+
+void RoutePage::RefreshList(const std::deque<Leg>& data)
+{
+	int page, verse, callbackpos;      //index of required screen and index of the lsk and line on that screen
+	int wp_index = 0;
+	for (int i = 0; i < data.size(); ++i)
+	{
+		page = (wp_index + _listStartLine) / _listPerPage + _listStartPage;
+		if (page >= cont.size())
+		{
+			AddPage();
+			cont[page].LMod(_lt, cont[page - 1].LReadLine(_lt));
+			cont[page].Mod(_s1, cont[page - 1].ReadLine(_s1));
+		}
+		verse = ((((wp_index + _listStartLine) % _listPerPage) + 1) * 2);
+		callbackpos = ListLSK(wp_index) + 2;
+		callbackpos %= 12;
+		//cont[page].RMod(verse, data[i]);
+		if (data[i].isWaypoint())
+		{
+			cont[page].LMod(verse, data[i].airway_id);	//update airway
+
+			cont[page].RMod(verse, data[i].waypoint.id); //update waypoint
+
+			if (callbackpos < 2)
+			{
+				page++;
+				if (page >= cont.size())
+				{
+					AddPage();
+					cont[page].LMod(_lt, cont[page - 1].LReadLine(_lt));
+				}
+			}
+			AddCb(callbackpos, page, functions[1][0]);
+			AddCb(callbackpos+1, page, functions[1][1]);
+
+			wp_index++;
+		}
+	}
+	int endpage = wp_index / _listPerPage + _listStartPage + 1;
+	if (cont.size() > endpage) cont.erase(cont.begin() + endpage, cont.end());
+	wp_index %= _listPerPage;
+	for (int i = wp_index + 1; i < 6; i++)
+	{
+		AddCb(2 * i, endpage - 1, invalid_entry);
+	}
+	
+	
+}
+
+//void Page::RefreshList(std::deque<std::string>data, int side, int line)
+//{
+//	int page, verse, callbackpos;      //index of required screen and index of the lsk and line on that screen
+//	for (int i = 0; i < data.size(); ++i)
+//	{
+//		page = (i + _listStartLine) / _listPerPage + _listStartPage;
+//		if (page >= cont.size())
+//		{
+//			AddPage();
+//			cont[page].LMod(_lt, cont[page - 1].LReadLine(_lt));
+//		}
+//		verse = ((((i + _listStartLine) % _listPerPage) + 1) * 2) - line;
+//		callbackpos = (((i + _listStartLine + 1) % _listPerPage) * 2) + side;
+//		if (side)cont[page].RMod(verse, data[i]);
+//		else cont[page].LMod(verse, data[i]);
+//		if (callbackpos < 2)
+//		{
+//			page++;
+//			if (page >= cont.size())
+//			{
+//				AddPage();
+//				cont[page].LMod(_lt, cont[page - 1].LReadLine(_lt));
+//			}
+//		}
+//		AddCb(callbackpos, page, functions[_listStartPage][_listStartLine * 2 + side]);
+//	}
+//}
+
+
 
 void Page::NextPage()
 {

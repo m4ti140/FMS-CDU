@@ -343,7 +343,7 @@ int navdata_parser(int mode, std::string search, Navaid* ret, std::ifstream* nav
 	}
 
 
-	if(mode==3) //open earth_awy.dat
+	if(mode==3||mode == 0) //open earth_awy.dat
 	{
 		found = 1;
 		if (navFile == NULL)
@@ -380,10 +380,10 @@ int navdata_parser(int mode, std::string search, Navaid* ret, std::ifstream* nav
 		//std::ofstream debug;
 		//debug.open(".\\Resources\\plugins\\FMS-CDU\\read_log.txt", std::ios::out);
 		size_t pos;
-		while (std::getline(*curNavFile, buff))
+		while (curNavFile->eof() == false && mode == 0)
 		{
 			
-			if (buff == "99")
+		/*	if (buff == "99")
 			{
 				found = 0;
 				break;
@@ -392,7 +392,7 @@ int navdata_parser(int mode, std::string search, Navaid* ret, std::ifstream* nav
 			{
 				pos = buff.find(search);
 				if (pos != std::string::npos) airway.ReadFromString(buff);
-			}
+			}*/
 
 			/*switch (mode)
 			{
@@ -424,6 +424,9 @@ int navdata_parser(int mode, std::string search, Navaid* ret, std::ifstream* nav
 			}
 			debug << buff;
 			//*curNavFile >> airway;*/
+			*curNavFile >> airway;
+			if (!curNavFile->eof())segments_db.push_back(airway);
+
 		}
 		if (curNavFile->eof() == true) found = 0;
 		if (inter == true) {
@@ -562,7 +565,7 @@ void initialize_interface()
 		""
 	};
 	buffs = Screen(buffer);
-	route = Page(buffs);
+	route = RoutePage(buffs);
 	route.AddCb(Page::l_lsk_1, 0, fmf::select_origin);
 	route.AddCb(Page::r_lsk_1, 0, fmf::select_destination);
 	//route.AddField(Page::r_lsk_2, 0, "--------");
@@ -588,7 +591,7 @@ void initialize_interface()
 		""
 	};
 	buffs = Screen(buffer);
-	legs = Page(buffs);
+	legs = LegsPage(buffs);
 	legs.MarkList(0, 0, 6);
 	
 }
@@ -672,12 +675,12 @@ PLUGIN_API void XPluginReceiveMessage(
 				//reinit everytime user plane loads
 				XPLMRegisterFlightLoopCallback(DeferredInitACLOAD, -10, NULL);
 				XPLMRegisterFlightLoopCallback(floop::GetPosition, -15, NULL);
-				XPLMRegisterFlightLoopCallback(floop::WindCalculation, 0, NULL);
-				XPLMRegisterFlightLoopCallback(floop::LNav, 0, NULL);
-				XPLMRegisterFlightLoopCallback(floop::distancenext, 0, NULL);
-				XPLMRegisterFlightLoopCallback(floop::turn, 0, NULL);
-				XPLMRegisterFlightLoopCallback(floop::distancesUpdate, 0, NULL);
-				XPLMRegisterFlightLoopCallback(floop::legNamesUpdate, 0, NULL);
+			//	XPLMRegisterFlightLoopCallback(floop::WindCalculation, 0, NULL);
+			//	XPLMRegisterFlightLoopCallback(floop::LNav, 0, NULL);
+			//	XPLMRegisterFlightLoopCallback(floop::distancenext, 0, NULL);
+			//	XPLMRegisterFlightLoopCallback(floop::turn, 0, NULL);
+			//	XPLMRegisterFlightLoopCallback(floop::distancesUpdate, 0, NULL);
+			//	XPLMRegisterFlightLoopCallback(floop::legNamesUpdate, 0, NULL);
 				//XPLMRegisterFlightLoopCallback(floop::Update_engine_rating, 5, NULL);
 			}
 

@@ -2,6 +2,7 @@
 #include <string>
 #include "Screen.h"
 #include "scratchpad.h"
+#include "Route.h"
 #include <vector>
 #include <deque>
 
@@ -10,7 +11,7 @@
 class Page
 {
 
-private:
+protected:
 	int _listStartLine;
 	int _listStartPage;
 	int _listPerPage;
@@ -32,8 +33,10 @@ public:
 	void Execute();
 	void SetExec(void(*nexecf)());
 	int ListIndex(int select); //for ordered lists: return index of item we select
+	int ListLSK(int index, int side=0); //for ordered lists: return LSK code for the given index, left side = 0, right side = 1 
 	void MarkList(int select, int page, int perpage=6); //mark beginning of a list
 	void RefreshList(std::deque<std::string>data, int side=0, int line=0);     //0 - left, 1 - right; 1-subline, 0-line
+	
 	void NextPage();
 	void PrevPage();
 
@@ -69,7 +72,7 @@ public:
 		r_lsk_6 = 11
 	};
 
-private:
+protected:
 	typedef Page*(*tempf)(int select, void* input, Page* output);
 
 public:
@@ -84,7 +87,7 @@ public:
 	static Page* invalid_entry(int select, void* input, Page* output);
 	static Page* call_page(int select, void* input, Page* output);
 	static Page* copy_paste(int select, void* input, Page* output);
-private:
+protected:
 
 	int _currpage;
 	bool _modstatus;
@@ -92,3 +95,16 @@ private:
 	
 };
 
+class LegsPage : public Page
+{
+public:
+	void RefreshList(const std::deque<Leg>& data);     //special version for the leg page
+	using Page::Page;
+};
+
+class RoutePage : public Page
+{
+public:
+	void RefreshList(const std::deque<Leg>& data);
+	using Page::Page;
+};

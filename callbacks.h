@@ -543,7 +543,7 @@ namespace floop
 
 	}
 
-	float LNav(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
+	/*float LNav(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 	{
 		float lon12;
 		float lon01;
@@ -551,19 +551,19 @@ namespace floop
 		float beta;
 		float dist;
 
-		lon12 = active_flightplan.path.front().lon RAD - aircraft.lon RAD;
+		lon12 = active_flightplan.legs.front().waypoint.lon RAD - aircraft.lon RAD;
 
-		aircraft.next_heading = atan2(sin(lon12), (cos(aircraft.lat RAD)*tan(active_flightplan.path.front().lat RAD) - sin(aircraft.lat RAD)*cos(lon12))) DEG;   //calculate great circle bearing to next waypoint
+		aircraft.next_heading = atan2(sin(lon12), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().waypoint.lat RAD) - sin(aircraft.lat RAD)*cos(lon12))) DEG;   //calculate great circle bearing to next waypoint
 
-		dist = 3440.0695* acos(sin(aircraft.lat RAD)*sin(active_flightplan.path.front().lat RAD) + cos(aircraft.lat RAD)*cos(active_flightplan.path.front().lat RAD)*cos(lon12));
+		dist = 3440.0695* acos(sin(aircraft.lat RAD)*sin(active_flightplan.legs.front().waypoint.lat RAD) + cos(aircraft.lat RAD)*cos(active_flightplan.legs.front().waypoint.lat RAD)*cos(lon12));
 
-		active_flightplan.distances.front() = dist;
+		active_flightplan.legs.front().distance = dist;
 
 		if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 
 		if (lnav == false)return 0.;			//if lnav has been turned off, stop flightloop;
 
-		if (active_flightplan.segments.front().name == active_flightplan.direct.name)   //if direct
+		if (active_flightplan.legs.front().segment.name == active_flightplan.direct.name)   //if direct
 		{
 			aircraft.heading = XPLMGetDataf(df::true_psi);
 			dec = XPLMGetDataf(df::magnetic_variation);
@@ -572,44 +572,44 @@ namespace floop
 			if ((aircraft.heading - aircraft.next_heading) < -20 || (aircraft.heading - aircraft.next_heading) > 20) XPLMSetDataf(df::heading_mag, aircraft.next_heading + dec);
 			else XPLMSetDataf(df::heading_mag, aircraft.next_heading + dec - beta);
 		}
-		else				//between waipoints
+		else				//between waypoints
 		{
 			char segdir;
-			segdir = active_flightplan.segments.front().dir;
+			segdir = active_flightplan.legs.front().segment.dir;
 
 			if (segdir == 'F')
 			{
-				lon01 = active_flightplan.segments.front().path.front()->lon RAD - aircraft.lon RAD;
+				lon01 = active_flightplan.legs.front().segment.path.front()->lon RAD - aircraft.lon RAD;
 
-				aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.segments.front().path.front()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
+				aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().segment.path.front()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
 
 				if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 			}
 
 			if (segdir == 'B')
 			{
-				lon01 = active_flightplan.segments.front().path.back()->lon RAD - aircraft.lon RAD;
+				lon01 = active_flightplan.legs.front().segment.path.back()->lon RAD - aircraft.lon RAD;
 
-				aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.segments.front().path.back()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
+				aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().segment.path.back()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
 
 				if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 			}
 
 			if (segdir == 'N')
 			{
-				if (*active_flightplan.segments.front().path.front() == active_flightplan.path.front())
+				if (*active_flightplan.legs.front().segment.legs.front().waypoint == active_flightplan.legs.front().waypoint)
 				{
-					lon01 = active_flightplan.segments.front().path.back()->lon RAD - aircraft.lon RAD;
+					lon01 = active_flightplan.legs.front().segment.path.back()->lon RAD - aircraft.lon RAD;
 
-					aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.segments.front().path.back()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
+					aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().segment.path.back()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
 
 					if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 				}
 				else
 				{
-					lon01 = active_flightplan.segments.front().path.front()->lon RAD - aircraft.lon RAD;
+					lon01 = active_flightplan.legs.front().segment.path.front()->lon RAD - aircraft.lon RAD;
 
-					aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.segments.front().path.front()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
+					aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().segment.path.front()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
 
 					if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 				}
@@ -624,40 +624,40 @@ namespace floop
 
 		}
 		return 1.0;
-	}
+	}*/
 
 	float distancenext(float elapsedMe, float elapsedSim, int counter, void* inRefcon)   //update distances to consecutive waypoints
 	{
-		if (active_flightplan.distances.size() < 2) return -5;
+		if (active_flightplan.legs.size() < 2) return -5;
 
-		if (distindex >= active_flightplan.distances.size())
+		if (distindex >= active_flightplan.legs.size())
 		{
 			distindex = 1;
 		}
-		float lon12 = active_flightplan.path[distindex].lon RAD - active_flightplan.path[distindex - 1].lon RAD;
+		float lon12 = active_flightplan.legs[distindex].waypoint.lon RAD - active_flightplan.legs[distindex - 1].waypoint.lon RAD;
 
-		active_flightplan.distances[distindex] = active_flightplan.distances[distindex - 1] + (3440.0695 * acos(sin(active_flightplan.path[distindex - 1].lat RAD)*sin(active_flightplan.path[distindex].lat RAD) + cos(active_flightplan.path[distindex - 1].lat RAD)*cos(active_flightplan.path[distindex].lat RAD)*cos(lon12)));
+		active_flightplan.legs[distindex].distance = active_flightplan.legs[distindex - 1].distance + (3440.0695 * acos(sin(active_flightplan.legs[distindex - 1].waypoint.lat RAD)*sin(active_flightplan.legs[distindex].waypoint.lat RAD) + cos(active_flightplan.legs[distindex - 1].waypoint.lat RAD)*cos(active_flightplan.legs[distindex].waypoint.lat RAD)*cos(lon12)));
 
 		distindex++;
 
 		return -5;
 	}
 
-	float distancesUpdate(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
+	/*float distancesUpdate(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 	{
 		std::deque<std::string>dist;
 
-		for (size_t i = 0; i < active_flightplan.distances.size(); i++)
+		for (size_t i = 0; i < active_flightplan.legs.size(); i++)
 		{
 			std::ostringstream buff;
-			buff << active_flightplan.distances[i];
+			buff << active_flightplan.legs[i].distance;
 			dist.push_back(buff.str());
 		}
 		legs.RefreshList(dist, 1, 0);
 		return 2.0;
-	}
+	}*/
 
-	float legNamesUpdate(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
+	/*float legNamesUpdate(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 	{
 		std::deque<std::string>names;
 		for (size_t i = 0; i < active_flightplan.path.size(); i++)
@@ -666,9 +666,9 @@ namespace floop
 		}
 		legs.RefreshList(names, 0, 0);
 		return 2.0;
-	}
+	}*/
 
-	float turn(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
+	/*float turn(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 	{
 		if (active_flightplan.path.size() <= 1) return 0.5;
 
@@ -683,9 +683,9 @@ namespace floop
 
 		float turnrad = vg*vg / (68417.1112*tan(bank RAD));
 
-		float lon12 = active_flightplan.path[1].lon RAD - active_flightplan.path.front().lon RAD;
+		float lon12 = active_flightplan.path[1].lon RAD - active_flightplan.legs.front().waypoint.lon RAD;
 
-		nextturn = atan2(sin(lon12), (cos(active_flightplan.path.front().lon RAD)*tan(active_flightplan.path[1].lat RAD) - sin(active_flightplan.path.front().lon RAD)*cos(lon12))) DEG;
+		nextturn = atan2(sin(lon12), (cos(active_flightplan.legs.front().waypoint.lon RAD)*tan(active_flightplan.path[1].lat RAD) - sin(active_flightplan.legs.front().waypoint.lon RAD)*cos(lon12))) DEG;
 
 		float dif = nextturn - aircraft.next_heading;
 
@@ -696,7 +696,7 @@ namespace floop
 
 		if (dif > 150)
 		{
-			if (active_flightplan.distances.front() < 5)
+			if (active_flightplan.legs.front().distance < 5)
 			{
 				active_flightplan.Next();
 				current_flightplan.Next();
@@ -707,7 +707,7 @@ namespace floop
 
 		disttoturnstart = tan(0.5*dif)*turnrad;
 
-		if (disttoturnstart < active_flightplan.distances.front())
+		if (disttoturnstart < active_flightplan.legs.front().distance)
 		{
 			active_flightplan.Next();
 			current_flightplan.Next();
@@ -715,7 +715,7 @@ namespace floop
 
 		return 0.5;
 
-	}
+	}*/
 
 }
 
@@ -840,7 +840,7 @@ namespace fmf
 			sp.Error("DATA NOT FOUND");
 			return NULL;
 		}
-		disp_byte(output, desc);
+		fmf::disp_byte(output, desc);
 		pagechange = true;
 		return NULL;
 	}
@@ -853,7 +853,7 @@ namespace fmf
 			sp.Error("DATA NOT FOUND");
 			return NULL;
 		}
-		disp_byte(output, desc);
+		fmf::disp_byte(output, desc);
 		pagechange = true;
 		return NULL;
 	}
@@ -866,7 +866,7 @@ namespace fmf
 			sp.Error("DATA NOT FOUND");
 			return NULL;
 		}
-		disp_float(output, desc);
+		fmf::disp_float(output, desc);
 		pagechange = true;
 		return NULL;
 	}
@@ -960,15 +960,26 @@ namespace fmf
 	Page* select_waypoint(int select, void* input, Page* output)
 	{
 		Scratchpad* edit = static_cast<Scratchpad*>(input);
+		int index = route.ListIndex(select);
+
+		if (edit->isDel())
+		{
+			current_flightplan.DelWaypoint(index);
+			route.RefreshList(current_flightplan.legs);
+			execute = activate_flightplan;
+			pagechange = true;
+			return NULL;
+		}
+
 		std::string ID = edit->cont;
 
 		std::vector<Navaid>::iterator node;
 		std::vector<Airway>::iterator seg;
 
-		Navaid* result;
+		Navaid result;
 
-		if (!current_flightplan.IsAirwaySelected())    //if we don't have airway for this segment
-		{
+		//if (!current_flightplan.IsAirwaySelected(index))    //if we don't have airway for this segment
+		//{
 			node = std::find_if(fixes_db.begin(), fixes_db.end(), [&](Navaid const& n) {return n.id == ID; });
 			if (node == fixes_db.end())
 			{
@@ -980,43 +991,52 @@ namespace fmf
 				}
 				else
 				{
-					result = &(*node);
+					result = *node;
 				}
 			}
 			else
 			{
-				result = &(*node);
+				result = *node;
 			}
-		}
-		else                                      //if we have an airway
-		{
-			seg = std::find_if(segments_db.begin(), segments_db.end(), [&](Airway const& n)    //for each segment in database 
-			{
-				if (std::any_of(n.awy.begin(), n.awy.end(), [=](std::string s) {return s == current_flightplan.airways.back(); })) //check if it's a part of the airway
-				{
-					if (n.path.front()->id == ID)                             //if yes check if the segment includes this waypoint and store the pointer to this waypoint in db
-					{
-						result = n.path.front();
-						return true;
-					}
-					if (n.path.back()->id == ID)
-					{
-						result = n.path.back();
-						return true;
-					}
-					else return false;
-				}
-				else return false;
-			});
-			if (seg == segments_db.end())
-			{
-				sp.Error("INVALID ENTRY");
-				return NULL;
-			}
-		}
-		current_flightplan.AddWaypoint(*result);
+		//}
+		//else                                      //if we have an airway
+		//{
+		//	AirRoute current_awy = current_flightplan.RecallRoute(index);
+		//	result = current_awy.CheckNavaidID(ID);
+		//	if (result == NULL)
+		//	{
+		//		sp.Error("INVALID ENTRY");
+		//		return NULL;
+		//	}
+		//}
+		//{
+		//	seg = std::find_if(segments_db.begin(), segments_db.end(), [&](Airway const& n)    //for each segment in database 
+		//	{
+		//		if (std::any_of(n.awy.begin(), n.awy.end(), [=](std::string s) {return s == current_flightplan.airways.back(); })) //check if it's a part of the airway
+		//		{
+		//			if (n.legs.front().waypoint->id == ID)                             //if yes check if the segment includes this waypoint and store the pointer to this waypoint in db
+		//			{
+		//				result = n.legs.front().waypoint;
+		//				return true;
+		//			}
+		//			if (n.path.back()->id == ID)
+		//			{
+		//				result = n.path.back();
+		//				return true;
+		//			}
+		//			else return false;
+		//		}
+		//		else return false;
+		//	});
+		//	if (seg == segments_db.end())
+		//	{
+		//		sp.Error("INVALID ENTRY");
+		//		return NULL;
+		//	}
+		//}
+		bool added = current_flightplan.AddWaypoint(result,index);
 		//Page::copy_paste(select, input, output);       //add text to route page, this will be depracated
-		int ammount = route.cont.size() - 1;
+		//int ammount = route.cont.size() - 1;
 		/*if (!current_flightplan.IsAirwaySelected())
 		{
 			if (select == Page::r_lsk_6 && route.cont.size()<=(route.GetSubpage()+1))
@@ -1029,56 +1049,172 @@ namespace fmf
 				route.AddCb(select + 2, ammount, select_waypoint);
 			}
 		}*/
-		route.RefreshList(current_flightplan.major_nodes, 1, 0);
-		route.RefreshList(current_flightplan.airways, 0, 0);
-		execute = activate_flightplan;
-		pagechange = true;
+
+		if (added) {
+			route.RefreshList(current_flightplan.legs);
+			execute = activate_flightplan;
+			pagechange = true;
+		}
+		else
+		{
+			sp.Error("INVALID ENTRY");
+		}
+		sp.Clear_All();
 		return NULL;
 	}
 
 	Page* select_airway(int select, void* input, Page* output)
 	{
 		Scratchpad* edit = static_cast<Scratchpad*>(input);
-		std::string airway_id = edit->cont;
-		int index = route.ListIndex(select);
-		
-		if (current_flightplan.IsWaypointSelected()) //we have an entry and exit and we just selected an airway to follow, now we have to find a path as airway might be diverging (it shouldn't)
-		{
-			std::vector<Airway>temp;
-			std::vector<bool>visited;
-			//iterate through database and find all segments of this airway
-			navdata_parser(3, airway_id);
-			std::vector<Airway>::iterator it;
-			while (it != segments_db.end())
-			{
-				it = std::find_if(segments_db.begin(), segments_db.end(), [&](Airway const& n) {
-					if (std::any_of(n.awy.begin(), n.awy.end(), [=](std::string s) {return s == airway_id; })) return true;
-				});
-				temp.push_back(*it);
-			}
 
-			AirRoute airway(airway_id, temp);
-			
-			/*std::vector<Navaid>traversal_path;/*
-			traversal_path=airway.BFS(current_flightplan.path[index - 1], current_flightplan.path[index]);
-			current_flightplan.AddAirway(airway_id, traversal_path);*/
-			current_flightplan.AddAirway(airway, index);
-			
+#ifdef _DEBUG
+		std::ofstream debug;
+		debug.open("FMSdebug.txt", std::ios_base::app);
+#endif
+
+		int index = route.ListIndex(select);
+
+		if (edit->isDel())
+		{
+			current_flightplan.DelAirway(index);
+			route.RefreshList(current_flightplan.legs);
+			execute = activate_flightplan;
+			pagechange = true;
+			return NULL;
 		}
-		execute = activate_flightplan;
-		pagechange = true;
-		return NULL;
+
+		std::string airway_id = edit->cont;
+
+		if (index == 0)		//first waypoint - no SID support yet
+		{
+			sp.Error("INVALID ENTRY");
+			return NULL;
+		}
+#ifdef _DEBUG
+		debug << "preaparing AirRoute object" <<std::endl;
+#endif
+		AirRoute airway;
+		airway = current_flightplan.RecallRoute(airway_id);
+
+#ifdef _DEBUG
+		debug << "recalled: " << airway.name << std::endl;
+#endif
+
+		if (airway.name == invalid.name)
+		{
+#ifdef _DEBUG
+			debug << "Searching db" << std::endl;
+#endif
+			std::vector<Airway>temp;
+			for (std::vector<Airway>::iterator it = segments_db.begin(); it != segments_db.end(); ++it)
+			{
+#ifdef _DEBUG
+				if (it == segments_db.begin()) debug << "iterating" << std::endl;
+#endif
+				if (it->CheckAwy(airway_id))
+				{
+#ifdef _DEBUG
+					debug << "found segment" <<std::endl;
+#endif
+					temp.push_back(*it);
+					if (!temp.back().MapNavaids())
+					{
+						sp.Error("DATABASE ERRORS FOUND");
+						return NULL;
+					}
+#ifdef _DEBUG
+					debug << "mapped " << temp.back().entry->id << " " << temp.back().exit->id << std::endl;
+#endif
+				}
+			}
+			if (temp.empty())
+			{
+#ifdef _DEBUG
+				debug << "querry not found" << std::endl;
+#endif
+				sp.Error("NOT IN DATABASE");
+				return NULL;
+			}
+			airway = AirRoute(airway_id, temp);
+#ifdef _DEBUG
+			debug << "airway retrieved" << std::endl;
+#endif
+		}
+
+#ifdef _DEBUG
+		debug << "running AddAirway" << std::endl;
+#endif
+		if (current_flightplan.AddAirway(airway, index))
+		{
+#ifdef _DEBUG
+			debug << "Airway added" << std::endl;
+#endif
+			route.RefreshList(current_flightplan.legs);
+			execute = activate_flightplan;
+			pagechange = true;
+			sp.Clear_All();
+			return NULL;
+		}
+		else
+		{
+			sp.Error("INVALID ENTRY");
+			return NULL;
+		}
+		
+		//if (index > 0 && current_flightplan.IsWaypointSelected(index) && current_flightplan.IsWaypointSelected(index-1)) //we have an entry and exit and we just selected an airway to follow, now we have to find a path as airway might be diverging (it shouldn't)
+		//{
+		//	std::vector<Airway>temp;
+		//	bool hasEntry=false, hasExit=false;
+		//	//std::vector<bool>visited;
+		//	//iterate through database and find all segments of this airway
+		//	for (std::vector<Airway>::iterator it = segments_db.begin(); it != segments_db.end(); ++it)
+		//	{
+		//		if (it->CheckAwy(airway_id))
+		//		{
+		//			temp.push_back(*it);
+		//			if (temp.back().MapNavaids())
+		//			{
+		//				sp.Error("DATABASE ERROR");
+		//				return NULL;
+		//			}
+		//			if (*(temp.back().entry) == current_flightplan.GetWp(index - 1).waypoint || *(temp.back().exit) == current_flightplan.GetWp(index - 1).waypoint) hasEntry = true;
+		//			if (*(temp.back().entry) == current_flightplan.GetWp(index).waypoint || *(temp.back().exit) == current_flightplan.GetWp(index).waypoint) hasExit = true;
+		//			
+		//		}
+		//	}
+		//	if (hasEntry == true && hasExit == true)
+		//	{
+		//		AirRoute airway(airway_id, temp);
+		//		current_flightplan.AddAirway(airway, index);
+		//		execute = activate_flightplan;
+		//		route.RefreshList(current_flightplan.legs);
+		//		pagechange = true;
+		//		return NULL;
+		//	}
+		//	else
+		//	{
+		//		temp.clear();
+		//		sp.Error("INVALID ENTRY");
+		//		return NULL;
+		//	}
+		//	/*std::vector<Navaid>traversal_path;/*
+		//	traversal_path=airway.BFS(current_flightplan.path[index - 1], current_flightplan.path[index]);
+		//	current_flightplan.AddAirway(airway_id, traversal_path);*/
+		//	
+		//}
+
+		//return NULL;
 	}
 
 	void activate_flightplan()
 	{
 		//check if origin and destination are present
 
-		if (current_flightplan.origin == "----" || current_flightplan.destination == "----")return;
+		if (current_flightplan.origin == empty_orig_dest || current_flightplan.destination == empty_orig_dest)return;
 
 		//check if they match the content
 
-		//if (current_flightplan.origin != current_flightplan.path.front().id || current_flightplan.destination != current_flightplan.path.back().name) return;
+		//if (current_flightplan.origin != current_flightplan.legs.front().waypoint.id || current_flightplan.destination != current_flightplan.path.back().name) return;
 
 		//if not copy the current route to active
 
@@ -1091,12 +1227,12 @@ namespace fmf
 		route.SetExec(NULL);
 
 		//XPLMSetFlightLoopCallbackInterval(floop::GetPosition, -1, 1, NULL);
-		XPLMSetFlightLoopCallbackInterval(floop::WindCalculation, -1, 1, NULL);
-		XPLMSetFlightLoopCallbackInterval(floop::LNav, -2, 1, NULL);
-		XPLMSetFlightLoopCallbackInterval(floop::distancenext, -3, 1, NULL);
-		XPLMSetFlightLoopCallbackInterval(floop::legNamesUpdate, -4, 1, NULL);
-		XPLMSetFlightLoopCallbackInterval(floop::distancesUpdate, -5, 1, NULL);
-		XPLMSetFlightLoopCallbackInterval(floop::turn, -6, 1, NULL);
+	//	XPLMSetFlightLoopCallbackInterval(floop::WindCalculation, -1, 1, NULL);
+		//XPLMSetFlightLoopCallbackInterval(floop::LNav, -2, 1, NULL);
+		//XPLMSetFlightLoopCallbackInterval(floop::distancenext, -3, 1, NULL);
+		//XPLMSetFlightLoopCallbackInterval(floop::legNamesUpdate, -4, 1, NULL);
+		//XPLMSetFlightLoopCallbackInterval(floop::distancesUpdate, -5, 1, NULL);
+		//XPLMSetFlightLoopCallbackInterval(floop::turn, -6, 1, NULL);
 
 		pagechange = true;
 

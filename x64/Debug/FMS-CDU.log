@@ -1,67 +1,14 @@
-﻿  Aircraft.cpp
-  Data.cpp
-  Navaid.cpp
-  Page.cpp
-c:\fms-cdu\page.cpp(96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\page.cpp(112): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\page.cpp(121): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\page.cpp(122): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  Pages.cpp
-  Route.cpp
-c:\fms-cdu\route.cpp(242): warning C4101: 'type': unreferenced local variable
-c:\fms-cdu\route.cpp(245): warning C4101: 'navpt': unreferenced local variable
-c:\fms-cdu\route.cpp(471): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\route.cpp(542): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
-c:\fms-cdu\route.cpp(737): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\route.cpp(779): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  scratchpad.cpp
-c:\fms-cdu\scratchpad.cpp(109): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\scratchpad.cpp(108): warning C4996: 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::copy': Call to 'std::basic_string::copy' with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\xstring(3135): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::copy'
-  Screen.cpp
-c:\fms-cdu\screen.cpp(152): warning C4996: 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::copy': Call to 'std::basic_string::copy' with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\xstring(3135): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::copy'
-c:\fms-cdu\screen.cpp(184): warning C4996: 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::copy': Call to 'std::basic_string::copy' with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\xstring(3135): note: see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::copy'
-  xpln.cpp
-c:\fms-cdu\callbacks.h(525): warning C4305: 'return': truncation from 'double' to 'float'
-c:\fms-cdu\callbacks.h(539): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(540): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(554): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(556): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(558): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(582): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(584): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(591): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(593): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(602): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(604): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(610): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(612): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(622): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(637): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(639): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(684): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(686): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(688): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(708): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(745): warning C4305: '*=': truncation from 'double' to 'float'
-c:\fms-cdu\callbacks.h(761): warning C4305: '*=': truncation from 'double' to 'float'
-c:\fms-cdu\callbacks.h(913): warning C4101: 'elevation': unreferenced local variable
-c:\fms-cdu\callbacks.h(953): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\callbacks.h(1019): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\xpln.cpp(631): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
-c:\fms-cdu\xpln.cpp(632): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
-c:\fms-cdu\xpln.cpp(633): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
-c:\fms-cdu\xpln.cpp(669): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
-c:\fms-cdu\xpln.cpp(669): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
-  widgetids.cpp
-  Generating Code...
-c:\fms-cdu\callbacks.h(1056): warning C4715: '<lambda_425bf08ba7891c21daaff8cea7968bc9>::operator()': not all control paths return a value
-     Creating library C:\FMS-CDU\x64\Debug\win.lib and object C:\FMS-CDU\x64\Debug\win.exp
+﻿  Route.cpp
+c:\fms-cdu\route.cpp(390): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\fms-cdu\route.cpp(390): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\fms-cdu\route.cpp(391): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\fms-cdu\route.cpp(391): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\fms-cdu\route.cpp(515): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
+c:\fms-cdu\route.cpp(516): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
+c:\fms-cdu\route.cpp(588): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\fms-cdu\route.cpp(934): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\fms-cdu\route.cpp(934): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+c:\fms-cdu\route.cpp(1083): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   FMS-CDU.vcxproj -> C:\FMS-CDU\x64\Debug\win.xpl
   FMS-CDU.vcxproj -> C:\FMS-CDU\x64\Debug\win.pdb (Partial PDB)
   C:\FMS-CDU\x64\Debug\win.xpl
