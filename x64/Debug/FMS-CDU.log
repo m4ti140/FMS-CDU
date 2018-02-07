@@ -1,15 +1,8 @@
-﻿  Route.cpp
-c:\fms-cdu\route.cpp(390): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\route.cpp(390): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-c:\fms-cdu\route.cpp(391): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\route.cpp(391): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-c:\fms-cdu\route.cpp(515): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
-c:\fms-cdu\route.cpp(516): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
-c:\fms-cdu\route.cpp(588): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\route.cpp(934): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\fms-cdu\route.cpp(934): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-c:\fms-cdu\route.cpp(1083): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  FMS-CDU.vcxproj -> C:\FMS-CDU\x64\Debug\win.xpl
-  FMS-CDU.vcxproj -> C:\FMS-CDU\x64\Debug\win.pdb (Partial PDB)
-  C:\FMS-CDU\x64\Debug\win.xpl
+﻿  Page.cpp
+f:\fms-cdu\page.cpp(96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\page.cpp(112): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\page.cpp(121): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\page.cpp(122): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  FMS-CDU.vcxproj -> F:\FMS-CDU\x64\Debug\win.xpl
+  F:\FMS-CDU\x64\Debug\win.xpl
   1 File(s) copied

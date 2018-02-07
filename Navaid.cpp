@@ -13,6 +13,16 @@ Navaid::Navaid()
 
 }
 
+Navaid::Navaid(std::string tid)
+{
+	lat = lon = 0.0;
+	freq = elev = range = 0;
+	type = Unkn;
+	heading = 0.0;
+	name = reg = regid = "";
+	
+}
+
 Navaid::Navaid(XPLMNavRef source)
 {
 	//prepare temporary storage for items that need additional conversion

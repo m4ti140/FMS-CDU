@@ -41,6 +41,7 @@ public:
 	int cls;
 	int base, top;
 	Airway();
+	Airway(std::string name);
 	Airway(Navaid* entry, Navaid* exit);
 	Airway(const Airway& copy);
 	~Airway();

@@ -35,6 +35,8 @@ return *this;
 
 Airway::Airway() : entry(NULL), exit(NULL), dir('N'), base(0), top(600), cls(1) {}
 
+Airway::Airway(std::string tname) : entry(NULL), exit(NULL), dir('N'), base(0), top(600), cls(1), name(tname) {}
+
 Airway::Airway(Navaid* ientry, Navaid* iexit)
 {
 	//name = "";
@@ -512,9 +514,9 @@ Navaid* Airway::GetExit(const Navaid& ientry)
 */
 
 const Airway direct = [] {Airway dir; dir.name = "DIRECT"; return dir; }();
-const Navaid discont_nav = [] {Navaid disc; disc.name = "□□□□□"; return disc; }();
-const Airway discont_awy = [] {Airway disc; disc.name = "□□□□□"; return disc; }();
-const Navaid empty_orig_dest = [] {Navaid ordest; ordest.name = "----"; return ordest; }();
+const Navaid discont_nav = [] {Navaid disc; disc.id = "XXXXX"; return disc; }();
+const Airway discont_awy = [] {Airway disc; disc.name = "XXXXX"; return disc; }();
+const Navaid empty_orig_dest = [] {Navaid ordest; ordest.id = "----"; return ordest; }();
 AirRoute invalid("INVALID");
 
 AirRoute::AirRoute() : name("") {}
@@ -556,11 +558,11 @@ AirRoute::AirRoute(std::string tname, std::vector<Airway>troute)
 
 		if (route[i].dir == 'N' || route[i].dir == 'F')				//if airway is forward or both, add final to initial's adjecency list
 		{
-			adjecents[iFront].push_back(iBack);
+			adjecents[iBack].push_back(iFront);
 		}
 		if (route[i].dir == 'N' || route[i].dir == 'B')				//if airway is backward or both, add initial to final's adjecency list
 		{
-			adjecents[iBack].push_back(iFront);
+			adjecents[iFront].push_back(iBack);
 		}
 
 	}
@@ -654,9 +656,17 @@ std::vector<Airway> AirRoute::SegmentList(std::vector<Navaid> traversal)
 		{
 			cur = *segit;
 			if (cur.dir == 'N' || cur.dir == 'F')
-				if (*cur.entry == *prev(wpit) && *cur.exit == *wpit) seglist.push_back(cur);
+				if (*cur.entry == *prev(wpit) && *cur.exit == *wpit)
+				{
+					seglist.push_back(cur);
+					segit = prev(route.end());
+				}
 			if (cur.dir == 'N' || cur.dir == 'B')
-				if (*cur.entry == *wpit && *cur.exit == *prev(wpit)) seglist.push_back(cur);
+				if (*cur.entry == *wpit && *cur.exit == *prev(wpit))
+				{
+					seglist.push_back(cur);
+					segit = prev(route.end());
+				}
 		}
 	}
 
@@ -665,7 +675,7 @@ std::vector<Airway> AirRoute::SegmentList(std::vector<Navaid> traversal)
 
 bool AirRoute::CheckNavaid(Navaid find)
 {
-	for (std::vector<Navaid>::iterator it; it != vertices.end(); ++it)
+	for (std::vector<Navaid>::iterator it=vertices.begin(); it != vertices.end(); ++it)
 	{
 		if (*it == find)return true;
 	}
@@ -674,7 +684,7 @@ bool AirRoute::CheckNavaid(Navaid find)
 
 Navaid AirRoute::CheckNavaidID(std::string find)
 {
-	for (std::vector<Navaid>::iterator it; it != vertices.end(); ++it)
+	for (std::vector<Navaid>::iterator it=vertices.begin(); it != vertices.end(); ++it)
 	{
 		if (it->id == find) return *it;
 	}
@@ -823,8 +833,6 @@ void Flightplan::Origin(Navaid orig)
 void Flightplan::Destination(Navaid dest)
 {
 	destination = dest;
-	Leg fin(false, dest);
-	legs.push_back(fin);
 }
 
 
@@ -917,28 +925,43 @@ void Flightplan::Next()
 bool Flightplan::IsAirwaySelected(int index)   //returns whether or not the airway has been selected for the current segment.
 {
 	//return airways.size() > major_nodes.size();
-	index = FindWpIndex(index);
+	//index = FindWpIndex(index);
 	if (legs[index].segment.name != direct.name && legs[index].segment.name != discont_awy.name) return true;
-	else return false;
+	if (legs[index].airway_id != direct.name) return true;
+	return false;
 }
 
 bool Flightplan::IsWaypointSelected(int index)  //returns whether the last airway segment ends in a waypoint
 {
-	index = FindWpIndex(index);
+	//index = FindWpIndex(index);
 	return legs[index].waypoint!=discont_nav;
 }
 
 int Flightplan::FindWpIndex(int index)
 {
-	int wp_in = 0;
-	const int len = legs.size();
-	int i = -1;
-	while (i != index && wp_in<len)
+	const size_t len = legs.size();
+	size_t leg_index = 0, waypoint_index = 0;
+start:
+	if (leg_index != len)
 	{
-		if (legs[wp_in].isWaypoint())i++;
-		wp_in++;
+		if (legs[leg_index].isWaypoint())
+		{
+			if (waypoint_index == index) return leg_index;
+			else
+			{
+				waypoint_index++;
+				leg_index++;
+				goto start;
+			}
+		}
+		else
+		{
+			leg_index++;
+			goto start;
+		}
 	}
-	return wp_in-1;
+	else return len;
+
 }
 
 Leg& Flightplan::GetWp(int index)
@@ -960,40 +983,55 @@ AirRoute& Flightplan::RecallRoute(std::string name)
 
 AirRoute& Flightplan::RecallRoute(int index)
 {
-	index = FindWpIndex(index);
+	//index = FindWpIndex(index);
 	std::string airway_name = legs[index].airway_id;
 	return RecallRoute(airway_name);
 }
 
 bool Flightplan::AddWaypoint(Navaid wp, int index)     //don't call without dest and orig set
 {
-	index = FindWpIndex(index);
-	if (index >= legs.size()) //at the end
+#ifdef _DEBUG
+	std::ofstream debug;
+	debug.open("FMSdebug.txt", std::ios_base::app);
+	debug << "Flightplan::AddWaypoint index=" << index << std::endl;
+#endif
+	int wp_index = FindWpIndex(index);
+
+#ifdef _DEBUG
+	debug << "index=" << wp_index << std::endl << "legs.size=" << legs.size() << std::endl;
+#endif
+	if (wp_index >= legs.size()) //at the end
 	{
+#ifdef _DEBUG
+		debug << "adding new leg" << std::endl;
+#endif
 		Leg wp_leg(true, wp, direct, wp.elev, A, wp.elev); //create new leg
 		legs.push_back(wp_leg);
+#ifdef _DEBUG
+		debug << "isWp=" << legs.back().isWaypoint() << std::endl;
+#endif
 		CheckContinuity();
 		return true;
 	}
 	else		//existing leg
 	{
-		if (!IsAirwaySelected(index))	//is airway to specified
+		if (!IsAirwaySelected(wp_index))	//is airway to specified
 		{
-			legs[index].waypoint = wp;
+			legs[wp_index].waypoint = wp;
 			CheckContinuity();
 			return true;
 		}
 		else
 		{
-			if (!RecallRoute(index).CheckNavaid(wp)) return false;	//is this waypoint on that airway
+			if (!RecallRoute(wp_index).CheckNavaid(wp)) return false;	//is this waypoint on that airway
 			else
 			{
-				if (!IsWaypointSelected(index - 1)) return false;	//is previous waypoint specified	
+				if (!IsWaypointSelected(FindWpIndex(index-1))) return false;	//is previous waypoint specified	
 				else												//if yes, rerun AddAirway for this leg
 				{
-					legs[index].waypoint = wp;
+					legs[wp_index].waypoint = wp;
 					DelAirway(index, false);
-					AddAirway(RecallRoute(index), index);
+					AddAirway(RecallRoute(wp_index), index);
 					CheckContinuity();
 					return true;
 				}
@@ -1044,16 +1082,16 @@ void Flightplan::DelAirway(int index, bool forget)
 
 void Flightplan::DelWaypoint(int index)
 {
-	index = FindWpIndex(index);
-	if (legs[index].segment.name == discont_awy.name || legs[index].segment.name == direct.name)
+	int wp_index = FindWpIndex(index);
+	if (legs[wp_index].segment.name == discont_awy.name || legs[wp_index].segment.name == direct.name)
 	{
-		legs.erase(legs.begin() + index);
+		legs.erase(legs.begin() + wp_index);
 	}
 	else
 	{
-		legs[index].waypoint = discont_nav;
-		DelAirway(index, false);
-		if ((index + 1) < legs.size()) DelAirway(index + 1);
+		legs[wp_index].waypoint = discont_nav;
+		DelAirway(wp_index, false);
+		if (FindWpIndex(index + 1) < legs.size()) DelAirway(FindWpIndex(index + 1));
 	}
 
 	CheckContinuity();
@@ -1061,9 +1099,20 @@ void Flightplan::DelWaypoint(int index)
 
 bool Flightplan::AddAirway(AirRoute airway, int index)
 {
-	index = FindWpIndex(index);
-	if (index >= legs.size()) //at the end
+#ifdef _DEBUG
+	std::ofstream debug;
+	debug.open("FMSdebug.txt", std::ios_base::app);
+	debug << "Flightplan::AddAirway index=" << index << std::endl;
+#endif
+	int aw_index = FindWpIndex(index);
+#ifdef _DEBUG
+	debug << "corrected index = " << aw_index << std::endl;
+#endif
+	if (aw_index >= legs.size()) //at the end
 	{
+#ifdef _DEBUG
+		debug << "Adding new leg" << std::endl;
+#endif
 		Leg aw_leg(true, discont_nav, direct, 0, A, 0, 0., airway.name);
 		legs.push_back(aw_leg);
 		stored_awy.push_back(airway);
@@ -1072,17 +1121,39 @@ bool Flightplan::AddAirway(AirRoute airway, int index)
 	}
 	else
 	{
-		if (!airway.CheckNavaid(legs[index].waypoint)) return false;
-		if (!airway.CheckNavaid(legs[index - 1].waypoint))return false;
+#ifdef _DEBUG
+		debug << "Modifying leg" << std::endl;
+		debug << "Searching for " << legs[aw_index].waypoint.id << " in " << airway.name << std::endl;
+#endif
+		if (!airway.CheckNavaid(legs[aw_index].waypoint)) return false;
+#ifdef _DEBUG
+		debug << "Searching for " << legs[FindWpIndex(index-1)].waypoint.id << " in " << airway.name << std::endl;
+#endif
+		if (!airway.CheckNavaid(legs[FindWpIndex(index-1)].waypoint))return false;
+		DelAirway(index, false);
+		legs[aw_index].airway_id = airway.name;
+#ifdef _DEBUG
+		debug << "Pathfinding..." << std::endl;
+#endif // _DEBUG
 
-		std::vector<Navaid> path = airway.BFS(legs[index-1].waypoint, legs[index].waypoint);
+		std::vector<Navaid> path = airway.BFS(legs[FindWpIndex(index-1)].waypoint, legs[aw_index].waypoint);
 		if (path.empty())return false;
+#ifdef _DEBUG
+		debug << "Pathfinding successful" << std::endl;
+#endif
+
 		std::vector<Airway> seg = airway.SegmentList(path);
 		std::deque<Leg>::iterator it;
-		legs[index].segment = seg.back();
-		for (int i = path.size()-2; i >= 0; i--)
+#ifdef _DEBUG
+		debug << "Adding last segment: " << seg.back().entry->id << "-" << seg.back().exit->id<< " dir: "<< seg.back().dir << std::endl;
+#endif
+		legs[aw_index].segment = seg.back();
+		for (int i = path.size()-2; i > 0; i--)
 		{
-			it = legs.begin() + index;
+			it = legs.begin() + aw_index;
+#ifdef _DEBUG
+			debug << "Inserting: " << seg[i].entry->id << "-" << seg[i].exit->id << " dir: " << seg[i].dir << std::endl;
+#endif
 			Leg temp(false, path[i], seg[i], seg[i].base, A, 0, 0., airway.name);
 			legs.insert(it, temp);
 		}
@@ -1146,6 +1217,11 @@ bool Flightplan::AddAirway(AirRoute airway, int index)
 void Flightplan::CheckContinuity()
 {
 	bool discont = false;
+#ifdef _DEBUG
+	std::ofstream debug;
+	debug.open("FMSdebug.txt", std::ios_base::app);
+	debug << "Running CheckContinuity" << std::endl;
+#endif
 	for (int i = 0; i < legs.size(); i++)
 	{
 		if (legs[i].segment.name == direct.name)

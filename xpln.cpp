@@ -5,6 +5,7 @@
 #include <sstream>         //tbd
 #include <string>
 #include <fstream>
+#include <cstdio>
 //#include <iostream>
 
 #include "XPLMDisplay.h"    
@@ -593,6 +594,7 @@ void initialize_interface()
 	buffs = Screen(buffer);
 	legs = LegsPage(buffs);
 	legs.MarkList(0, 0, 6);
+	legs_bup = legs;
 	
 }
 
@@ -641,6 +643,7 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc)
 	//initialize_database();
 	navdata_parser();
 	//airfield_parser();
+	remove("FMSdebug.txt");
 	
 	return 1;
 }

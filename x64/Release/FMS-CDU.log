@@ -8,44 +8,45 @@ Page.cpp(121): warning C4267: 'argument': conversion from 'size_t' to 'int', pos
 Page.cpp(122): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   Pages.cpp
   Route.cpp
-Route.cpp(388): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-Route.cpp(388): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-Route.cpp(389): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-Route.cpp(389): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-Route.cpp(513): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
-Route.cpp(514): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
-Route.cpp(586): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-Route.cpp(932): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-Route.cpp(932): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-Route.cpp(1081): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(392): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(392): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+Route.cpp(393): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(393): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+Route.cpp(590): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(949): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(963): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(1151): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   scratchpad.cpp
-scratchpad.cpp(109): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+scratchpad.cpp(110): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Screen.cpp
   xpln.cpp
-c:\fms-cdu\callbacks.h(525): warning C4305: 'return': truncation from 'double' to 'float'
-c:\fms-cdu\callbacks.h(539): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(540): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(637): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(639): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\fms-cdu\callbacks.h(745): warning C4305: '*=': truncation from 'double' to 'float'
-c:\fms-cdu\callbacks.h(761): warning C4305: '*=': truncation from 'double' to 'float'
-c:\fms-cdu\callbacks.h(913): warning C4101: 'elevation': unreferenced local variable
-c:\fms-cdu\callbacks.h(953): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-xpln.cpp(382): warning C4101: 'pos': unreferenced local variable
-xpln.cpp(634): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
-xpln.cpp(635): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
+f:\fms-cdu\callbacks.h(525): warning C4305: 'return': truncation from 'double' to 'float'
+f:\fms-cdu\callbacks.h(539): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(540): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(637): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(639): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(745): warning C4305: '*=': truncation from 'double' to 'float'
+f:\fms-cdu\callbacks.h(761): warning C4305: '*=': truncation from 'double' to 'float'
+f:\fms-cdu\callbacks.h(913): warning C4101: 'elevation': unreferenced local variable
+f:\fms-cdu\callbacks.h(953): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\callbacks.h(1142): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+xpln.cpp(383): warning C4101: 'pos': unreferenced local variable
 xpln.cpp(636): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
-xpln.cpp(672): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
-xpln.cpp(672): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+xpln.cpp(637): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+xpln.cpp(638): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+xpln.cpp(675): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
+xpln.cpp(675): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
   widgetids.cpp
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
-     Creating library C:\FMS-CDU\x64\Release\win.lib and object C:\FMS-CDU\x64\Release\win.exp
+     Creating library F:\FMS-CDU\x64\Release\win.lib and object F:\FMS-CDU\x64\Release\win.exp
   Generating code
-  All 1839 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  1851 of 1851 functions (100.0%) were compiled, the rest were copied from previous compilation.
+    73 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  FMS-CDU.vcxproj -> C:\FMS-CDU\x64\Release\win.xpl
-  C:\FMS-CDU\x64\Release\win.xpl
+  FMS-CDU.vcxproj -> F:\FMS-CDU\x64\Release\win.xpl
+  F:\FMS-CDU\x64\Release\win.xpl
   1 File(s) copied

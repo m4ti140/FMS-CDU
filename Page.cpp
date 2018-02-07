@@ -248,19 +248,19 @@ void LegsPage::RefreshList(const std::deque<Leg>& data)
 
 		buff << data[i].elevation<< "/" << data[i].restriction;  //update restrictions
 
-		cont[page].LMod(verse, buff.str());   
+		cont[page].RMod(verse, buff.str());   
 
-		buff.clear();
+		std::ostringstream buff2;
 
-		buff << data[i].heading;        //update heading
+		buff2 << data[i].heading;        //update heading
 
-		cont[page].LMod(verse - 1, buff.str());
+		cont[page].LMod(verse - 1, buff2.str());
 
-		buff.clear();
+		std::ostringstream buff3;
 
-		buff << data[i].distance;		//update distance
+		buff3 << data[i].distance;		//update distance
 
-		cont[page].RMod(verse - 1, buff.str());
+		cont[page].RMod(verse - 1, buff3.str());
 		if (callbackpos < 2)
 		{
 			page++;
@@ -276,11 +276,18 @@ void LegsPage::RefreshList(const std::deque<Leg>& data)
 
 void RoutePage::RefreshList(const std::deque<Leg>& data)
 {
+#ifdef _DEBUG
+	std::ofstream debug;
+	debug.open("FMSdebug.txt", std::ios_base::app);
+#endif
 	int page, verse, callbackpos;      //index of required screen and index of the lsk and line on that screen
 	int wp_index = 0;
 	for (int i = 0; i < data.size(); ++i)
 	{
 		page = (wp_index + _listStartLine) / _listPerPage + _listStartPage;
+#ifdef _DEBUG
+		debug << "page=" << page << std::endl;
+#endif
 		if (page >= cont.size())
 		{
 			AddPage();
@@ -288,8 +295,14 @@ void RoutePage::RefreshList(const std::deque<Leg>& data)
 			cont[page].Mod(_s1, cont[page - 1].ReadLine(_s1));
 		}
 		verse = ((((wp_index + _listStartLine) % _listPerPage) + 1) * 2);
+#ifdef _DEBUG
+		debug << "verse=" << verse << std::endl;
+#endif
 		callbackpos = ListLSK(wp_index) + 2;
 		callbackpos %= 12;
+#ifdef _DEBUG
+		debug << "callbackpos=" << callbackpos << std::endl << "i=" << i<<std::endl;
+#endif
 		//cont[page].RMod(verse, data[i]);
 		if (data[i].isWaypoint())
 		{
@@ -310,6 +323,9 @@ void RoutePage::RefreshList(const std::deque<Leg>& data)
 			AddCb(callbackpos+1, page, functions[1][1]);
 
 			wp_index++;
+#ifdef _DEBUG
+			debug << "wp_index=" << wp_index << std::endl;
+#endif
 		}
 	}
 	int endpage = wp_index / _listPerPage + _listStartPage + 1;

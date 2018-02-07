@@ -959,6 +959,10 @@ namespace fmf
 	
 	Page* select_waypoint(int select, void* input, Page* output)
 	{
+#ifdef _DEBUG
+		std::ofstream debug;
+		debug.open("FMSdebug.txt", std::ios_base::app);
+#endif
 		Scratchpad* edit = static_cast<Scratchpad*>(input);
 		int index = route.ListIndex(select);
 
@@ -1034,6 +1038,9 @@ namespace fmf
 		//		return NULL;
 		//	}
 		//}
+#ifdef _DEBUG
+			debug << "adding wp" << std::endl;
+#endif
 		bool added = current_flightplan.AddWaypoint(result,index);
 		//Page::copy_paste(select, input, output);       //add text to route page, this will be depracated
 		//int ammount = route.cont.size() - 1;
@@ -1051,6 +1058,9 @@ namespace fmf
 		}*/
 
 		if (added) {
+#ifdef _DEBUG
+			debug << "wp added" << std::endl;
+#endif
 			route.RefreshList(current_flightplan.legs);
 			execute = activate_flightplan;
 			pagechange = true;
@@ -1060,6 +1070,9 @@ namespace fmf
 			sp.Error("INVALID ENTRY");
 		}
 		sp.Clear_All();
+#ifdef _DEBUG
+		debug << "exiting" << std::endl;
+#endif
 		return NULL;
 	}
 
@@ -1124,7 +1137,19 @@ namespace fmf
 					}
 #ifdef _DEBUG
 					debug << "mapped " << temp.back().entry->id << " " << temp.back().exit->id << std::endl;
+					debug << "Checking for duplicate" << std::endl;
 #endif
+					for (int i = temp.size() - 2; i >= 0; i--)
+					{
+						if (temp[i].entry == temp.back().entry && temp[i].exit == temp.back().exit)
+						{
+							temp.pop_back();
+							i = -1;
+#ifdef _DEBUG
+							debug << "Duplicate found, removing..." << std::endl;
+#endif
+						}
+					}
 				}
 			}
 			if (temp.empty())
@@ -1223,8 +1248,12 @@ namespace fmf
 		//and add the route list page
 
 		if(route.cont.size()<=1) add_route_page();
+		legs = legs_bup;
+		legs.RefreshList(active_flightplan.legs);
 
-		route.SetExec(NULL);
+		//route.SetExec(NULL);
+
+		execute = NULL;
 
 		//XPLMSetFlightLoopCallbackInterval(floop::GetPosition, -1, 1, NULL);
 	//	XPLMSetFlightLoopCallbackInterval(floop::WindCalculation, -1, 1, NULL);

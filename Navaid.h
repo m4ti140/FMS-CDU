@@ -51,6 +51,7 @@ class Navaid
 {
 public:
 	Navaid();
+	Navaid(std::string tid);
 	Navaid(NavTypeNew type);
 	Navaid(XPLMNavRef source);
 	Navaid(const Navaid& copy);
