@@ -1,4 +1,4 @@
-#define _xpln_
+﻿#define _xpln_
 
 //#include <cstdio>
 #include <cstring>
@@ -148,6 +148,11 @@ void FMScreate(int x1, int y1)
 	k::R_LSK5 = XPCreateWidget(x2 - 45, y1 - 204, x2 - 5, y1 - 221, 1, "---", 0, FMSwindow, xpWidgetClass_Button);
 	k::R_LSK6 = XPCreateWidget(x2 - 45, y1 - 238, x2 - 5, y1 - 255, 1, "---", 0, FMSwindow, xpWidgetClass_Button);
 
+	//additional
+	k::LNAV = XPCreateWidget(x1 + 170, y1 - 610, x1 + 195, y1 - 625, 1, "L-Nav", 0, FMSwindow, xpWidgetClass_Button);
+	XPSetWidgetProperty(k::LNAV, xpProperty_ButtonType, xpRadioButton);
+	XPSetWidgetProperty(k::LNAV, xpProperty_ButtonBehavior, xpButtonBehaviorCheckBox);
+	XPSetWidgetProperty(k::LNAV, xpProperty_ButtonState, 0);
 	/*
 	//screen, def format
 	
@@ -532,9 +537,9 @@ void initialize_interface()
 		"          POS INIT|1/1",
 		"",
 		"",
+		"|CURRENT POS",
+		"|□□□°□□.□ □□□□°□□.□",
 		"",
-		"",
-		"         INOP",
 		"",
 		"",
 		"",
@@ -678,12 +683,14 @@ PLUGIN_API void XPluginReceiveMessage(
 				//reinit everytime user plane loads
 				XPLMRegisterFlightLoopCallback(DeferredInitACLOAD, -10, NULL);
 				XPLMRegisterFlightLoopCallback(floop::GetPosition, -15, NULL);
-			//	XPLMRegisterFlightLoopCallback(floop::WindCalculation, 0, NULL);
-			//	XPLMRegisterFlightLoopCallback(floop::LNav, 0, NULL);
-			//	XPLMRegisterFlightLoopCallback(floop::distancenext, 0, NULL);
-			//	XPLMRegisterFlightLoopCallback(floop::turn, 0, NULL);
-			//	XPLMRegisterFlightLoopCallback(floop::distancesUpdate, 0, NULL);
-			//	XPLMRegisterFlightLoopCallback(floop::legNamesUpdate, 0, NULL);
+				XPLMRegisterFlightLoopCallback(floop::WindCalculation, 0, NULL);
+				XPLMRegisterFlightLoopCallback(floop::LNav, 0, NULL);
+				XPLMRegisterFlightLoopCallback(floop::updatenextleg, 0, NULL);
+				XPLMRegisterFlightLoopCallback(floop::legsUpdate, 0, NULL);
+				//XPLMRegisterFlightLoopCallback(floop::distancenext, 0, NULL);
+				XPLMRegisterFlightLoopCallback(floop::turn, 0, NULL);
+				//XPLMRegisterFlightLoopCallback(floop::distancesUpdate, 0, NULL);
+				//XPLMRegisterFlightLoopCallback(floop::legNamesUpdate, 0, NULL);
 				//XPLMRegisterFlightLoopCallback(floop::Update_engine_rating, 5, NULL);
 			}
 

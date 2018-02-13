@@ -17,13 +17,12 @@
 #include "XPUIGraphics.h"
 #include "datarefs.h"
 #include "XPLMPlanes.h"
+#include "geomath.h"
 //#include <algorithm>
 
 #define N_TO_LBF *=0.224809;
 #define W_TO_HP *=0.00134102;
-#define PI 3.14159265
-#define RAD *PI/180.
-#define DEG *180./PI
+
 
 bool menuitem;
 Scratchpad sp;
@@ -35,6 +34,7 @@ char current_aircraft_path[512];
 char current_aircraft_file[256];
 void(*execute)() = NULL;
 bool lnav = false;
+bool refreshed_once = false;
 size_t distindex = 1;
 
 namespace call 
@@ -498,6 +498,12 @@ namespace call
 			return 1;
 		}
 
+		if (inParam1 == (intptr_t)k::LNAV && inMessage == xpMsg_PushButtonPressed)
+		{
+			lnav = inParam2;
+			return 1;
+		}
+
 		return 0;
 	}
 	
@@ -507,6 +513,8 @@ namespace call
 		return 1;
 	}*/
 }
+
+
 
 namespace floop
 {
@@ -522,6 +530,14 @@ namespace floop
 		aircraft.lat = XPLMGetDataf(df::latitude);
 		aircraft.lon = XPLMGetDataf(df::longitude);
 		aircraft.alt = XPLMGetDataf(df::elevation);
+
+		Coord loc(aircraft.lat, aircraft.lon);
+		//std::string posstr = loc.GetString();
+
+		pos_init.cont[0].RMod(Page::_l2, loc.GetString());
+
+		if (currpage == &pos_init) pagechange = true;
+
 		return 0.1;
 	}
 
@@ -543,104 +559,133 @@ namespace floop
 
 	}
 
-	/*float LNav(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
+	float LNav(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 	{
-		float lon12;
-		float lon01;
+		if (active_flightplan.legs.size() < 2) return 0.5;
+
+		Coord p1(aircraft.lat, aircraft.lon);
+		Coord p2(active_flightplan.legs.front().waypoint.lat, active_flightplan.legs.front().waypoint.lon);
 		float dec;
 		float beta;
 		float dist;
 
-		lon12 = active_flightplan.legs.front().waypoint.lon RAD - aircraft.lon RAD;
+		//if (lnav == false)return 0.;			//if lnav has been turned off, stop flightloop;
 
-		aircraft.next_heading = atan2(sin(lon12), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().waypoint.lat RAD) - sin(aircraft.lat RAD)*cos(lon12))) DEG;   //calculate great circle bearing to next waypoint
+		//lon12 = active_flightplan.legs.front().waypoint.lon RAD - aircraft.lon RAD;
 
-		dist = 3440.0695* acos(sin(aircraft.lat RAD)*sin(active_flightplan.legs.front().waypoint.lat RAD) + cos(aircraft.lat RAD)*cos(active_flightplan.legs.front().waypoint.lat RAD)*cos(lon12));
+		aircraft.next_heading = great_circle_in(p1, p2);  //calculate great circle bearing to next waypoint
+
+		dist = great_circle_in(p1, p2);  //calculate great circle distance to next waypoint
 
 		active_flightplan.legs.front().distance = dist;
 
-		if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
+		active_flightplan.legs.front().heading = aircraft.next_heading;
 
-		if (lnav == false)return 0.;			//if lnav has been turned off, stop flightloop;
-
-		if (active_flightplan.legs.front().segment.name == active_flightplan.direct.name)   //if direct
+		//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
+		if (lnav == true)
 		{
-			aircraft.heading = XPLMGetDataf(df::true_psi);
-			dec = XPLMGetDataf(df::magnetic_variation);
-			beta = XPLMGetDataf(df::beta);
-
-			if ((aircraft.heading - aircraft.next_heading) < -20 || (aircraft.heading - aircraft.next_heading) > 20) XPLMSetDataf(df::heading_mag, aircraft.next_heading + dec);
-			else XPLMSetDataf(df::heading_mag, aircraft.next_heading + dec - beta);
-		}
-		else				//between waypoints
-		{
-			char segdir;
-			segdir = active_flightplan.legs.front().segment.dir;
-
-			if (segdir == 'F')
+			if (active_flightplan.legs.front().segment.name == direct.name)   //if direct
 			{
-				lon01 = active_flightplan.legs.front().segment.path.front()->lon RAD - aircraft.lon RAD;
+				aircraft.heading = XPLMGetDataf(df::true_psi);
+				dec = XPLMGetDataf(df::magnetic_variation);
+				beta = XPLMGetDataf(df::beta);
 
-				aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().segment.path.front()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
-
-				if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
+				if (AbsDiff(aircraft.heading, aircraft.next_heading) > 20) XPLMSetDataf(df::heading_mag, (float)(aircraft.next_heading + dec));
+				else XPLMSetDataf(df::heading_mag, (float)(aircraft.next_heading + dec - beta));
 			}
-
-			if (segdir == 'B')
+			else				//between waypoints
 			{
-				lon01 = active_flightplan.legs.front().segment.path.back()->lon RAD - aircraft.lon RAD;
+				char segdir;
+				segdir = active_flightplan.legs.front().segment.dir;
 
-				aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().segment.path.back()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
-
-				if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
-			}
-
-			if (segdir == 'N')
-			{
-				if (*active_flightplan.legs.front().segment.legs.front().waypoint == active_flightplan.legs.front().waypoint)
+				if (segdir == 'F')
 				{
-					lon01 = active_flightplan.legs.front().segment.path.back()->lon RAD - aircraft.lon RAD;
+					Coord p0(active_flightplan.legs.front().segment.entry->lat, active_flightplan.legs.front().segment.entry->lon);
 
-					aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().segment.path.back()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
+					aircraft.prev_heading = great_circle_out(p0, p1);
+					//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
+				}
 
-					if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
+				if (segdir == 'B')
+				{
+					Coord p0(active_flightplan.legs.front().segment.exit->lat, active_flightplan.legs.front().segment.exit->lon);
+
+					aircraft.prev_heading = great_circle_out(p0, p1);
+
+					//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
+				}
+
+				if (segdir == 'N')
+				{
+					if (active_flightplan.legs.front().segment.entry->name == active_flightplan.legs.front().waypoint.name)
+					{
+						Coord p0(active_flightplan.legs.front().segment.exit->lat, active_flightplan.legs.front().segment.exit->lon);
+
+						aircraft.prev_heading = great_circle_out(p0, p1);
+
+						//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
+					}
+					else
+					{
+						Coord p0(active_flightplan.legs.front().segment.entry->lat, active_flightplan.legs.front().segment.entry->lon);
+
+						aircraft.prev_heading = great_circle_out(p0, p1);
+
+						//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
+					}
+				}
+
+				aircraft.heading = XPLMGetDataf(df::true_psi);
+				dec = XPLMGetDataf(df::magnetic_variation);
+				beta = XPLMGetDataf(df::beta);
+				Azimuth corrected_heading;
+
+				corrected_heading = aircraft.next_heading + dec;
+				if (aircraft.next_heading < aircraft.prev_heading)
+				{
+					if (AbsDiff(aircraft.next_heading, aircraft.prev_heading) > 10.) corrected_heading -= AbsDiff(aircraft.next_heading, aircraft.prev_heading.Rev()) / 2.;
+					else corrected_heading -= AbsDiff(aircraft.next_heading, aircraft.prev_heading);
 				}
 				else
 				{
-					lon01 = active_flightplan.legs.front().segment.path.front()->lon RAD - aircraft.lon RAD;
-
-					aircraft.prev_heading = atan2(sin(lon01), (cos(aircraft.lat RAD)*tan(active_flightplan.legs.front().segment.path.front()->lat RAD) - sin(aircraft.lat RAD)*cos(lon01))) DEG;
-
-					if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
+					if (AbsDiff(aircraft.next_heading, aircraft.prev_heading) > 10.) corrected_heading += AbsDiff(aircraft.next_heading, aircraft.prev_heading.Rev()) / 2.;
+					else corrected_heading += AbsDiff(aircraft.next_heading, aircraft.prev_heading);
 				}
+				if (AbsDiff(aircraft.heading, aircraft.next_heading) > 20.) XPLMSetDataf(df::heading_mag, corrected_heading);
+				else XPLMSetDataf(df::heading_mag, (float)(corrected_heading - beta));
+
 			}
-
-			aircraft.heading = XPLMGetDataf(df::true_psi);
-			dec = XPLMGetDataf(df::magnetic_variation);
-			beta = XPLMGetDataf(df::beta);
-
-			if ((aircraft.heading - aircraft.next_heading) < -20 || (aircraft.heading - aircraft.next_heading) > 20) XPLMSetDataf(df::heading_mag, aircraft.next_heading + dec - (aircraft.next_heading - aircraft.prev_heading + 180.));
-			else XPLMSetDataf(df::heading_mag, aircraft.next_heading + dec - beta - (aircraft.next_heading - aircraft.prev_heading + 180));
-
 		}
-		return 1.0;
-	}*/
+		return 0.5;
+	}
 
-	float distancenext(float elapsedMe, float elapsedSim, int counter, void* inRefcon)   //update distances to consecutive waypoints
+	float updatenextleg(float elapsedMe, float elapsedSim, int counter, void* inRefcon)   //update distances to consecutive waypoints
 	{
 		if (active_flightplan.legs.size() < 2) return -5;
+
+		Coord p1(active_flightplan.legs[distindex - 1].waypoint.lat, active_flightplan.legs[distindex - 1].waypoint.lon);
+		Coord p2(active_flightplan.legs[distindex].waypoint.lat, active_flightplan.legs[distindex].waypoint.lon);
 
 		if (distindex >= active_flightplan.legs.size())
 		{
 			distindex = 1;
+			refreshed_once = true;
 		}
-		float lon12 = active_flightplan.legs[distindex].waypoint.lon RAD - active_flightplan.legs[distindex - 1].waypoint.lon RAD;
+		//float lon12 = active_flightplan.legs[distindex].waypoint.lon RAD - active_flightplan.legs[distindex - 1].waypoint.lon RAD;
 
-		active_flightplan.legs[distindex].distance = active_flightplan.legs[distindex - 1].distance + (3440.0695 * acos(sin(active_flightplan.legs[distindex - 1].waypoint.lat RAD)*sin(active_flightplan.legs[distindex].waypoint.lat RAD) + cos(active_flightplan.legs[distindex - 1].waypoint.lat RAD)*cos(active_flightplan.legs[distindex].waypoint.lat RAD)*cos(lon12)));
+		if(refreshed_once == false)active_flightplan.legs[distindex].heading = great_circle_in(p1, p2);
+		active_flightplan.legs[distindex].distance = active_flightplan.legs[distindex - 1].distance + great_circle_distance(p1, p2);
 
 		distindex++;
 
 		return -5;
+	}
+
+	float legsUpdate(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
+	{
+		legs.RefreshList(active_flightplan.legs);
+		pagechange = true;
+		return 2.0;
 	}
 
 	/*float distancesUpdate(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
@@ -653,26 +698,28 @@ namespace floop
 			buff << active_flightplan.legs[i].distance;
 			dist.push_back(buff.str());
 		}
-		legs.RefreshList(dist, 1, 0);
+		legs.RefreshList(active_flightplan.legs);
 		return 2.0;
 	}*/
 
 	/*float legNamesUpdate(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 	{
 		std::deque<std::string>names;
-		for (size_t i = 0; i < active_flightplan.path.size(); i++)
+		for (size_t i = 0; i < active_flightplan.legs.size(); i++)
 		{
-			names.push_back(active_flightplan.path[i].id);
+			names.push_back(active_flightplan.id);
 		}
-		legs.RefreshList(names, 0, 0);
+		legs.RefreshList(active_flightplan.legs);
 		return 2.0;
 	}*/
 
-	/*float turn(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
+	float turn(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 	{
-		if (active_flightplan.path.size() <= 1) return 0.5;
+		if (lnav == false) return 0.5;
+		if (active_flightplan.legs.size() <= 1) return 0.5;
 
-		float disttoturnstart, vg, nextturn;
+		float disttoturnstart, vg;
+		Azimuth nextturn;
 		int bank = XPLMGetDatai(df::heading_roll_mode);
 		if (bank = 0)
 		{
@@ -683,16 +730,9 @@ namespace floop
 
 		float turnrad = vg*vg / (68417.1112*tan(bank RAD));
 
-		float lon12 = active_flightplan.path[1].lon RAD - active_flightplan.legs.front().waypoint.lon RAD;
+		nextturn = active_flightplan.legs[1].heading;
 
-		nextturn = atan2(sin(lon12), (cos(active_flightplan.legs.front().waypoint.lon RAD)*tan(active_flightplan.path[1].lat RAD) - sin(active_flightplan.legs.front().waypoint.lon RAD)*cos(lon12))) DEG;
-
-		float dif = nextturn - aircraft.next_heading;
-
-		if (dif > 180) dif -= 360;
-		if (dif < 180) dif += 360;
-
-		dif = abs(dif);
+		float dif = AbsDiff(nextturn, aircraft.next_heading);
 
 		if (dif > 150)
 		{
@@ -715,7 +755,7 @@ namespace floop
 
 		return 0.5;
 
-	}*/
+	}
 
 }
 
@@ -1061,7 +1101,7 @@ namespace fmf
 #ifdef _DEBUG
 			debug << "wp added" << std::endl;
 #endif
-			route.RefreshList(current_flightplan.legs);
+			//route.RefreshList(current_flightplan.legs);
 			execute = activate_flightplan;
 			pagechange = true;
 		}
@@ -1244,6 +1284,7 @@ namespace fmf
 		//if not copy the current route to active
 
 		active_flightplan = current_flightplan;
+		refreshed_once = false;
 
 		//and add the route list page
 
@@ -1255,13 +1296,13 @@ namespace fmf
 
 		execute = NULL;
 
-		//XPLMSetFlightLoopCallbackInterval(floop::GetPosition, -1, 1, NULL);
-	//	XPLMSetFlightLoopCallbackInterval(floop::WindCalculation, -1, 1, NULL);
-		//XPLMSetFlightLoopCallbackInterval(floop::LNav, -2, 1, NULL);
+		XPLMSetFlightLoopCallbackInterval(floop::GetPosition, -1, 1, NULL);
+		XPLMSetFlightLoopCallbackInterval(floop::WindCalculation, -1, 1, NULL);
+		XPLMSetFlightLoopCallbackInterval(floop::LNav, -2, 1, NULL);
 		//XPLMSetFlightLoopCallbackInterval(floop::distancenext, -3, 1, NULL);
 		//XPLMSetFlightLoopCallbackInterval(floop::legNamesUpdate, -4, 1, NULL);
 		//XPLMSetFlightLoopCallbackInterval(floop::distancesUpdate, -5, 1, NULL);
-		//XPLMSetFlightLoopCallbackInterval(floop::turn, -6, 1, NULL);
+		XPLMSetFlightLoopCallbackInterval(floop::turn, -6, 1, NULL);
 
 		pagechange = true;
 
