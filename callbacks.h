@@ -36,6 +36,9 @@ void(*execute)() = NULL;
 bool lnav = false;
 bool refreshed_once = false;
 size_t distindex = 1;
+#ifdef _DEBUG
+std::ofstream lnavdebug;
+#endif
 
 namespace call 
 {
@@ -569,6 +572,11 @@ namespace floop
 		float beta;
 		float dist;
 
+#ifdef _DEBUG
+		lnavdebug << "p1: " << p1.lat << " " << p1.lon << std::endl;
+		lnavdebug << "p2: " << p2.lat << " " << p2.lon << std::endl;
+#endif
+
 		//if (lnav == false)return 0.;			//if lnav has been turned off, stop flightloop;
 
 		//lon12 = active_flightplan.legs.front().waypoint.lon RAD - aircraft.lon RAD;
@@ -580,6 +588,11 @@ namespace floop
 		active_flightplan.legs.front().distance = dist;
 
 		active_flightplan.legs.front().heading = aircraft.next_heading;
+
+#ifdef _DEBUG
+		lnavdebug << "aircraft.next_heading: " << aircraft.next_heading << std::endl;
+		lnavdebug << "dist: " << dist << std::endl;
+#endif
 
 		//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 		if (lnav == true)
@@ -663,14 +676,16 @@ namespace floop
 	{
 		if (active_flightplan.legs.size() < 2) return -5;
 
-		Coord p1(active_flightplan.legs[distindex - 1].waypoint.lat, active_flightplan.legs[distindex - 1].waypoint.lon);
-		Coord p2(active_flightplan.legs[distindex].waypoint.lat, active_flightplan.legs[distindex].waypoint.lon);
-
 		if (distindex >= active_flightplan.legs.size())
 		{
 			distindex = 1;
 			refreshed_once = true;
 		}
+
+		Coord p1(active_flightplan.legs[distindex - 1].waypoint.lat, active_flightplan.legs[distindex - 1].waypoint.lon);
+		Coord p2(active_flightplan.legs[distindex].waypoint.lat, active_flightplan.legs[distindex].waypoint.lon);
+
+
 		//float lon12 = active_flightplan.legs[distindex].waypoint.lon RAD - active_flightplan.legs[distindex - 1].waypoint.lon RAD;
 
 		if(refreshed_once == false)active_flightplan.legs[distindex].heading = great_circle_in(p1, p2);
@@ -1101,7 +1116,7 @@ namespace fmf
 #ifdef _DEBUG
 			debug << "wp added" << std::endl;
 #endif
-			//route.RefreshList(current_flightplan.legs);
+			route.RefreshList(current_flightplan.legs);
 			execute = activate_flightplan;
 			pagechange = true;
 		}
@@ -1274,6 +1289,9 @@ namespace fmf
 	void activate_flightplan()
 	{
 		//check if origin and destination are present
+#ifdef _DEBUG
+		lnavdebug.open("LNavDebug.txt", std::ios::app);
+#endif
 
 		if (current_flightplan.origin == empty_orig_dest || current_flightplan.destination == empty_orig_dest)return;
 
@@ -1290,17 +1308,17 @@ namespace fmf
 
 		if(route.cont.size()<=1) add_route_page();
 		legs = legs_bup;
-		legs.RefreshList(active_flightplan.legs);
+		//legs.RefreshList(active_flightplan.legs);
 
 		//route.SetExec(NULL);
 
 		execute = NULL;
 
-		XPLMSetFlightLoopCallbackInterval(floop::GetPosition, -1, 1, NULL);
+		//XPLMSetFlightLoopCallbackInterval(floop::GetPosition, -1, 1, NULL);
 		XPLMSetFlightLoopCallbackInterval(floop::WindCalculation, -1, 1, NULL);
 		XPLMSetFlightLoopCallbackInterval(floop::LNav, -2, 1, NULL);
-		//XPLMSetFlightLoopCallbackInterval(floop::distancenext, -3, 1, NULL);
-		//XPLMSetFlightLoopCallbackInterval(floop::legNamesUpdate, -4, 1, NULL);
+		XPLMSetFlightLoopCallbackInterval(floop::updatenextleg, -3, 1, NULL);
+		XPLMSetFlightLoopCallbackInterval(floop::legsUpdate, -4, 1, NULL);
 		//XPLMSetFlightLoopCallbackInterval(floop::distancesUpdate, -5, 1, NULL);
 		XPLMSetFlightLoopCallbackInterval(floop::turn, -6, 1, NULL);
 

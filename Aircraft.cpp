@@ -120,7 +120,7 @@ std::string Coord::GetString()
 
 	if (fabsf(lat) < 10.) buff << "0";
 
-	buff << (int)intpart << "°" << frac * 60 << " ";
+	buff << (int)intpart << "*" << frac * 60 << " ";
 	
 	frac = modff(lon, &intpart);
 
@@ -130,7 +130,7 @@ std::string Coord::GetString()
 	if (fabsf(lon) < 100.) buff << "0";
 	if (fabsf(lon) < 10.) buff << "0";
 
-	buff << (int)intpart << "°" << frac * 60;
+	buff << (int)intpart << "*" << frac * 60;
 
 	return buff.str();
 }

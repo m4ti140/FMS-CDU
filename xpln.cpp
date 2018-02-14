@@ -149,7 +149,7 @@ void FMScreate(int x1, int y1)
 	k::R_LSK6 = XPCreateWidget(x2 - 45, y1 - 238, x2 - 5, y1 - 255, 1, "---", 0, FMSwindow, xpWidgetClass_Button);
 
 	//additional
-	k::LNAV = XPCreateWidget(x1 + 170, y1 - 610, x1 + 195, y1 - 625, 1, "L-Nav", 0, FMSwindow, xpWidgetClass_Button);
+	k::LNAV = XPCreateWidget(x1 + 170, y1 - 610, x1 + 205, y1 - 625, 1, "  L-Nav", 0, FMSwindow, xpWidgetClass_Button);
 	XPSetWidgetProperty(k::LNAV, xpProperty_ButtonType, xpRadioButton);
 	XPSetWidgetProperty(k::LNAV, xpProperty_ButtonBehavior, xpButtonBehaviorCheckBox);
 	XPSetWidgetProperty(k::LNAV, xpProperty_ButtonState, 0);
@@ -622,7 +622,9 @@ void initialize_database()   //not working, XPLMNavRef doesn't seem to respond p
 
 float DeferredInitACLOAD(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 {
+
 	std::string good_init = initialize_data();
+
 	if (good_init != "datarefs|OK")
 	{
 		std::ostringstream errorcode;

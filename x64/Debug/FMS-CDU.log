@@ -1,28 +1,32 @@
-﻿  xpln.cpp
+﻿  Data.cpp
+f:\fms-cdu\aircraft.h(27): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+  xpln.cpp
 f:\fms-cdu\aircraft.h(27): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
 f:\fms-cdu\geomath.h(65): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-f:\fms-cdu\callbacks.h(541): warning C4305: 'return': truncation from 'double' to 'float'
-f:\fms-cdu\callbacks.h(555): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-f:\fms-cdu\callbacks.h(556): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-f:\fms-cdu\callbacks.h(646): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-f:\fms-cdu\callbacks.h(651): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-f:\fms-cdu\callbacks.h(731): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-f:\fms-cdu\callbacks.h(748): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-f:\fms-cdu\callbacks.h(785): warning C4305: '*=': truncation from 'double' to 'float'
-f:\fms-cdu\callbacks.h(801): warning C4305: '*=': truncation from 'double' to 'float'
-f:\fms-cdu\callbacks.h(953): warning C4101: 'elevation': unreferenced local variable
-f:\fms-cdu\callbacks.h(993): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-f:\fms-cdu\callbacks.h(1182): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\callbacks.h(544): warning C4305: 'return': truncation from 'double' to 'float'
+f:\fms-cdu\callbacks.h(558): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(559): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(659): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+f:\fms-cdu\callbacks.h(664): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+f:\fms-cdu\callbacks.h(746): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(763): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(800): warning C4305: '*=': truncation from 'double' to 'float'
+f:\fms-cdu\callbacks.h(816): warning C4305: '*=': truncation from 'double' to 'float'
+f:\fms-cdu\callbacks.h(968): warning C4101: 'elevation': unreferenced local variable
+f:\fms-cdu\callbacks.h(1008): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\callbacks.h(1197): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 f:\fms-cdu\xpln.cpp(388): warning C4101: 'pos': unreferenced local variable
 f:\fms-cdu\xpln.cpp(541): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
-f:\fms-cdu\xpln.cpp(641): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
-f:\fms-cdu\xpln.cpp(642): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
 f:\fms-cdu\xpln.cpp(643): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
-f:\fms-cdu\xpln.cpp(680): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
-f:\fms-cdu\xpln.cpp(680): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
+f:\fms-cdu\xpln.cpp(644): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+f:\fms-cdu\xpln.cpp(645): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+f:\fms-cdu\xpln.cpp(682): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
+f:\fms-cdu\xpln.cpp(682): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
+  Generating Code...
+     Creating library F:\FMS-CDU\x64\Debug\win.lib and object F:\FMS-CDU\x64\Debug\win.exp
   FMS-CDU.vcxproj -> F:\FMS-CDU\x64\Debug\win.xpl
   F:\FMS-CDU\x64\Debug\win.xpl
   1 File(s) copied
