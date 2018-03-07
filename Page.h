@@ -30,8 +30,8 @@ public:
 	void AddRef(int select, int page, Page* target);
 	//void AddField(int select, int page, std::string init, void* database=NULL);
 	int GetSubpage();
-	void Execute();
-	void SetExec(void(*nexecf)());
+	//void Execute();
+	//void SetExec(void(*nexecf)());
 	int ListIndex(int select); //for ordered lists: return index of item we select
 	int ListLSK(int index, int side=0); //for ordered lists: return LSK code for the given index, left side = 0, right side = 1 
 	void MarkList(int select, int page, int perpage=6); //mark beginning of a list
@@ -80,7 +80,7 @@ public:
 	std::vector<std::vector<tempf>> functions;
 	std::vector<std::vector<Page*>> callmap;
 	//std::vector<std::vector<void*>> databases;
-	void(*execf)();
+	//void(*execf)();
 
 
 	
@@ -98,7 +98,7 @@ protected:
 class LegsPage : public Page
 {
 public:
-	void RefreshList(const std::deque<Leg>& data);     //special version for the leg page
+	void RefreshList(const std::deque<Leg>& data);  
 	using Page::Page;
 };
 

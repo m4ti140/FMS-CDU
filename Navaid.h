@@ -47,17 +47,17 @@ typedef enum
 	EOFType = 99
 }NavTypeNew;
 
-class Navaid
+struct Navaid
 {
-public:
+
 	Navaid();
 	Navaid(std::string tid);
 	Navaid(NavTypeNew type);
 	Navaid(XPLMNavRef source);
 	Navaid(const Navaid& copy);
 	Navaid& operator=(const Navaid& assign);
-	friend bool operator==(const Navaid& comprare1, const Navaid& compare2);
-	friend bool operator!=(const Navaid& comprare1, const Navaid& compare2);
+	friend bool operator==(const Navaid& compare1, const Navaid& compare2);
+	friend bool operator!=(const Navaid& compare1, const Navaid& compare2);
 	friend std::istream& operator>>(std::istream& is, Navaid& data);
 	~Navaid();
 	

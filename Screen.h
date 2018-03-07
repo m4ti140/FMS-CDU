@@ -20,7 +20,7 @@ public:
 	void Clear();
 	void GetScrn(char(&container)[13][46]);
 	char* GetLine(int line);
-	void UpdatePageAmmount(int current, int number, bool isUp);
+	void UpdatePageAmmount(int current, int number);
 	std::string ReadLine(int line);
 	std::string RReadLine(int line);
 	std::string LReadLine(int line);

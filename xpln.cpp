@@ -475,6 +475,7 @@ void initialize_interface()
 	buffs = Screen(buffer);
 	init_ref=Page(buffs);
 	init_ref.AddRef(Page::l_lsk_1, 0, &ident);
+	init_ref.AddRef(Page::l_lsk_2, 0, &pos_init);
 
 	//blank screen
 

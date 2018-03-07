@@ -11,9 +11,15 @@
 
 class Azimuth
 {
+public:
+	typedef enum
+	{
+		deg = 0,
+		rad = 1
+	}Unit;
 protected:
 	float _heading;
-	int _mode;
+	Unit _mode;
 	void Trim();
 public:
 	typedef enum
@@ -24,7 +30,7 @@ public:
 
 	Azimuth() : _heading(0.), _mode(deg) {}
 	Azimuth(Unit mode) : _heading(0.), _mode(mode) {}
-	Azimuth(const Azimuth& copy) : _heading(copy._heading), _mode(copy._heading) {}
+	Azimuth(const Azimuth& copy) : _heading(copy._heading), _mode(copy._mode) {}
 	Azimuth(const float& copy) : _heading(copy), _mode(deg) { Trim(); }
 
 	float GetRad();

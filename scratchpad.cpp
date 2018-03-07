@@ -26,10 +26,10 @@ Scratchpad::~Scratchpad()
 
 void Scratchpad::Add(std::string input)
 {
-	if (_errstatus == false) {
+	if (_errstatus == false) 
+	{
 		if (_buffer.length() < 42) _buffer.append(input);
 		cont = _buffer;
-		//this->Draw();
 	}
 	_change = true;
 }

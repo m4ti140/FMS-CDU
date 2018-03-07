@@ -572,15 +572,6 @@ namespace floop
 		float beta;
 		float dist;
 
-#ifdef _DEBUG
-		lnavdebug << "p1: " << p1.lat << " " << p1.lon << std::endl;
-		lnavdebug << "p2: " << p2.lat << " " << p2.lon << std::endl;
-#endif
-
-		//if (lnav == false)return 0.;			//if lnav has been turned off, stop flightloop;
-
-		//lon12 = active_flightplan.legs.front().waypoint.lon RAD - aircraft.lon RAD;
-
 		aircraft.next_heading = great_circle_in(p1, p2);  //calculate great circle bearing to next waypoint
 
 		dist = great_circle_in(p1, p2);  //calculate great circle distance to next waypoint
@@ -589,12 +580,6 @@ namespace floop
 
 		active_flightplan.legs.front().heading = aircraft.next_heading;
 
-#ifdef _DEBUG
-		lnavdebug << "aircraft.next_heading: " << aircraft.next_heading << std::endl;
-		lnavdebug << "dist: " << dist << std::endl;
-#endif
-
-		//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 		if (lnav == true)
 		{
 			if (active_flightplan.legs.front().segment.name == direct.name)   //if direct
@@ -611,21 +596,18 @@ namespace floop
 				char segdir;
 				segdir = active_flightplan.legs.front().segment.dir;
 
+				//get previous waypoint and calculate heading to it
+
 				if (segdir == 'F')
 				{
 					Coord p0(active_flightplan.legs.front().segment.entry->lat, active_flightplan.legs.front().segment.entry->lon);
-
 					aircraft.prev_heading = great_circle_out(p0, p1);
-					//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 				}
 
 				if (segdir == 'B')
 				{
 					Coord p0(active_flightplan.legs.front().segment.exit->lat, active_flightplan.legs.front().segment.exit->lon);
-
 					aircraft.prev_heading = great_circle_out(p0, p1);
-
-					//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 				}
 
 				if (segdir == 'N')
@@ -633,18 +615,12 @@ namespace floop
 					if (active_flightplan.legs.front().segment.entry->name == active_flightplan.legs.front().waypoint.name)
 					{
 						Coord p0(active_flightplan.legs.front().segment.exit->lat, active_flightplan.legs.front().segment.exit->lon);
-
 						aircraft.prev_heading = great_circle_out(p0, p1);
-
-						//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 					}
 					else
 					{
 						Coord p0(active_flightplan.legs.front().segment.entry->lat, active_flightplan.legs.front().segment.entry->lon);
-
 						aircraft.prev_heading = great_circle_out(p0, p1);
-
-						//if (aircraft.next_heading < 0) aircraft.next_heading += 360.;
 					}
 				}
 
@@ -652,6 +628,8 @@ namespace floop
 				dec = XPLMGetDataf(df::magnetic_variation);
 				beta = XPLMGetDataf(df::beta);
 				Azimuth corrected_heading;
+
+				//calculate the heading for airway interception
 
 				corrected_heading = aircraft.next_heading + dec;
 				if (aircraft.next_heading < aircraft.prev_heading)
@@ -879,7 +857,7 @@ namespace fmf
 		output->cont[subpage].Mod(0, conv.str());
 	}
 
-	Page* go_back(int select, void* input, Page* output)
+	Page* go_back(int select, void* input, Page* output) //depracated
 	{
 		currpage = history.top();
 		history.pop();
@@ -1021,7 +999,7 @@ namespace fmf
 		Scratchpad* edit = static_cast<Scratchpad*>(input);
 		int index = route.ListIndex(select);
 
-		if (edit->isDel())
+		if (edit->isDel())	//if the scratchpad is in delete mode, delete instead
 		{
 			current_flightplan.DelWaypoint(index);
 			route.RefreshList(current_flightplan.legs);
@@ -1030,88 +1008,41 @@ namespace fmf
 			return NULL;
 		}
 
-		std::string ID = edit->cont;
+		std::string ID = edit->cont;	//retrieve content of the scratchpad
 
 		std::vector<Navaid>::iterator node;
 		std::vector<Airway>::iterator seg;
 
 		Navaid result;
 
-		//if (!current_flightplan.IsAirwaySelected(index))    //if we don't have airway for this segment
-		//{
-			node = std::find_if(fixes_db.begin(), fixes_db.end(), [&](Navaid const& n) {return n.id == ID; });
-			if (node == fixes_db.end())
+		//search nodes_db and fixes_db for the content of the scratchpad
+
+		node = std::find_if(fixes_db.begin(), fixes_db.end(), [&](Navaid const& n) {return n.id == ID; });
+		if (node == fixes_db.end())
+		{
+			node = std::find_if(nodes_db.begin(), nodes_db.end(), [&](Navaid const& n) {return n.id == ID; });
+			
+			//if nothing found, display error on the scratchpad
+			if(node == nodes_db.end())
 			{
-				node = std::find_if(nodes_db.begin(), nodes_db.end(), [&](Navaid const& n) {return n.id == ID; });
-				if(node == nodes_db.end())
-				{
-					sp.Error("NOT IN DATABASE");
-					return NULL;
-				}
-				else
-				{
-					result = *node;
-				}
+				sp.Error("NOT IN DATABASE");
+				return NULL;
 			}
 			else
 			{
 				result = *node;
 			}
-		//}
-		//else                                      //if we have an airway
-		//{
-		//	AirRoute current_awy = current_flightplan.RecallRoute(index);
-		//	result = current_awy.CheckNavaidID(ID);
-		//	if (result == NULL)
-		//	{
-		//		sp.Error("INVALID ENTRY");
-		//		return NULL;
-		//	}
-		//}
-		//{
-		//	seg = std::find_if(segments_db.begin(), segments_db.end(), [&](Airway const& n)    //for each segment in database 
-		//	{
-		//		if (std::any_of(n.awy.begin(), n.awy.end(), [=](std::string s) {return s == current_flightplan.airways.back(); })) //check if it's a part of the airway
-		//		{
-		//			if (n.legs.front().waypoint->id == ID)                             //if yes check if the segment includes this waypoint and store the pointer to this waypoint in db
-		//			{
-		//				result = n.legs.front().waypoint;
-		//				return true;
-		//			}
-		//			if (n.path.back()->id == ID)
-		//			{
-		//				result = n.path.back();
-		//				return true;
-		//			}
-		//			else return false;
-		//		}
-		//		else return false;
-		//	});
-		//	if (seg == segments_db.end())
-		//	{
-		//		sp.Error("INVALID ENTRY");
-		//		return NULL;
-		//	}
-		//}
+		}
+		else
+		{
+			result = *node;
+		}
 #ifdef _DEBUG
 			debug << "adding wp" << std::endl;
 #endif
-		bool added = current_flightplan.AddWaypoint(result,index);
-		//Page::copy_paste(select, input, output);       //add text to route page, this will be depracated
-		//int ammount = route.cont.size() - 1;
-		/*if (!current_flightplan.IsAirwaySelected())
-		{
-			if (select == Page::r_lsk_6 && route.cont.size()<=(route.GetSubpage()+1))
-			{
-				add_route_page();
-			}
-			else
-			{
-				route.AddCb(select + 1, ammount, select_airway);
-				route.AddCb(select + 2, ammount, select_waypoint);
-			}
-		}*/
+		bool added = current_flightplan.AddWaypoint(result,index);	//call AddWaypoint for the result
 
+		//if adding the waypoint to buffer flightplan fails display error, otherwise refresh route page
 		if (added) {
 #ifdef _DEBUG
 			debug << "wp added" << std::endl;
@@ -1240,50 +1171,6 @@ namespace fmf
 			sp.Error("INVALID ENTRY");
 			return NULL;
 		}
-		
-		//if (index > 0 && current_flightplan.IsWaypointSelected(index) && current_flightplan.IsWaypointSelected(index-1)) //we have an entry and exit and we just selected an airway to follow, now we have to find a path as airway might be diverging (it shouldn't)
-		//{
-		//	std::vector<Airway>temp;
-		//	bool hasEntry=false, hasExit=false;
-		//	//std::vector<bool>visited;
-		//	//iterate through database and find all segments of this airway
-		//	for (std::vector<Airway>::iterator it = segments_db.begin(); it != segments_db.end(); ++it)
-		//	{
-		//		if (it->CheckAwy(airway_id))
-		//		{
-		//			temp.push_back(*it);
-		//			if (temp.back().MapNavaids())
-		//			{
-		//				sp.Error("DATABASE ERROR");
-		//				return NULL;
-		//			}
-		//			if (*(temp.back().entry) == current_flightplan.GetWp(index - 1).waypoint || *(temp.back().exit) == current_flightplan.GetWp(index - 1).waypoint) hasEntry = true;
-		//			if (*(temp.back().entry) == current_flightplan.GetWp(index).waypoint || *(temp.back().exit) == current_flightplan.GetWp(index).waypoint) hasExit = true;
-		//			
-		//		}
-		//	}
-		//	if (hasEntry == true && hasExit == true)
-		//	{
-		//		AirRoute airway(airway_id, temp);
-		//		current_flightplan.AddAirway(airway, index);
-		//		execute = activate_flightplan;
-		//		route.RefreshList(current_flightplan.legs);
-		//		pagechange = true;
-		//		return NULL;
-		//	}
-		//	else
-		//	{
-		//		temp.clear();
-		//		sp.Error("INVALID ENTRY");
-		//		return NULL;
-		//	}
-		//	/*std::vector<Navaid>traversal_path;/*
-		//	traversal_path=airway.BFS(current_flightplan.path[index - 1], current_flightplan.path[index]);
-		//	current_flightplan.AddAirway(airway_id, traversal_path);*/
-		//	
-		//}
-
-		//return NULL;
 	}
 
 	void activate_flightplan()

@@ -4,11 +4,12 @@
 
 void Azimuth::Trim()
 {
-	if (_mode == deg) {
+	if (_mode == deg)		//for degrees: add/subtract 360 degrees
+	{		
 		while (_heading < 0.) _heading += 360.;
 		while (_heading > 360.) _heading -= 360.;
 	}
-	if (_mode == rad)
+	if (_mode == rad)		//for radians: add/subtract 2pi radians
 	{
 		while (_heading < 0.) _heading += 6.28318;
 		while (_heading > 6.28318) _heading -= 6.28318;
@@ -105,7 +106,7 @@ Azimuth Azimuth::Rev()
 
 std::string Coord::GetString()
 {
-	std::ostringstream buff;
+	std::ostringstream buff;	//stream object
 
 	buff.flags(std::ios::fixed);
 	buff.precision(1);
@@ -113,14 +114,14 @@ std::string Coord::GetString()
 	float intpart;
 	float frac;
 
-	frac = modff(lat, &intpart);
+	frac = modff(lat, &intpart); //separate fractional part for conversion
 
-	if (lat > 0.) buff << "N";
+	if (lat > 0.) buff << "N";	//insert north or south hemisphere
 	else buff << "S";
 
-	if (fabsf(lat) < 10.) buff << "0";
+	if (fabsf(lat) < 10.) buff << "0";	//insert leading zeroes
 
-	buff << (int)intpart << "*" << frac * 60 << " ";
+	buff << (int)intpart << "*" << frac * 60 << " "; //insert degrees and minutes
 	
 	frac = modff(lon, &intpart);
 

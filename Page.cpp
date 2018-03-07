@@ -86,14 +86,14 @@ void Page::AddPage(Screen init)
 	cont.push_back(init);
 	std::vector<tempf>tempfunc;
 	std::vector<Page*>tempmap;
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 12; i++) //for every LSK set a placeholder function
 	{
 		tempfunc.push_back(invalid_entry);
 		tempmap.push_back(NULL);
 	}
 	functions.push_back(tempfunc);
 	callmap.push_back(tempmap);
-	for (int i = 0; i < cont.size(); i++)cont[i].UpdatePageAmmount(i, cont.size(), true);
+	for (int i = 0; i < cont.size(); i++)cont[i].UpdatePageAmmount(i, cont.size());
 }
 
 void Page::AddPage()
@@ -109,7 +109,7 @@ void Page::AddPage()
 	}
 	functions.push_back(tempfunc);
 	callmap.push_back(tempmap);
-	for (int i = 0; i < cont.size(); i++)cont[i].UpdatePageAmmount(i, cont.size(), true);
+	for (int i = 0; i < cont.size(); i++)cont[i].UpdatePageAmmount(i, cont.size());
 }
 
 void Page::DelPage()
@@ -118,7 +118,7 @@ void Page::DelPage()
 	functions.pop_back();
 	callmap.pop_back();
 	//databases.pop_back();
-	for (int i = 0; i < cont.size(); i++)cont[i].UpdatePageAmmount(i, cont.size(), false);
+	for (int i = 0; i < cont.size(); i++)cont[i].UpdatePageAmmount(i, cont.size());
 	if (_currpage >= cont.size()) _currpage = cont.size() - 1;
 }
 
@@ -129,7 +129,7 @@ Page* Page::Callback(int select, void* input)
 
 void Page::AddCb(int select, int page, Page*(*func)(int, void*, Page*))
 {
-	functions[page][select] = func; //check if this works on next oportunity // it does
+	functions[page][select] = func;
 }
 
 void Page::AddRef(int select, int page, Page* target)
@@ -173,15 +173,15 @@ int Page::GetSubpage()
 	return _currpage;
 }
 
-void Page::Execute()
-{
-	execf();
-}
-
-void Page::SetExec(void(*nexecf)())
-{
-	execf = nexecf;
-}
+//void Page::Execute()
+//{
+//	execf();
+//}
+//
+//void Page::SetExec(void(*nexecf)())
+//{
+//	execf = nexecf;
+//}
 
 int Page::ListIndex(int select)
 {

@@ -113,7 +113,7 @@ void Screen::RMod(int line, std::string mod)
 	}
 }
 
-void Screen::GetScrn(char (&container)[13][46]) //formats screen for drawing and returns as a 40/13 2D array of chars
+void Screen::GetScrn(char (&container)[13][46]) //formats screen for drawing and returns as a 46/13 2D array of chars
 {
 	std::size_t pos;
 	std::string* buffer;
@@ -142,18 +142,12 @@ void Screen::GetScrn(char (&container)[13][46]) //formats screen for drawing and
 		while (buffer[i].length() < 45) buffer[i].append(" "); //add trailing spaces
 	}
 	
-	//container = new char*[13];
-	//for (int i = 0; i < 13; i++)
-	//{
-	//	container[i] = new char[40];
-	//}
 	for (int i = 0; i < 13; i++)
 	{
 		buffer[i].copy(container[i], 45, 0); //copy contents onto the array passed in argument
 		container[i][45] = '\0';
 	}
 	delete[] buffer;
-
 }
 
 char * Screen::GetLine(int line)
@@ -188,7 +182,7 @@ char * Screen::GetLine(int line)
 
 }
 
-void Screen::UpdatePageAmmount(int current, int number, bool isUp)
+void Screen::UpdatePageAmmount(int current, int number)
 {
 	std::ostringstream buff;
 	buff << current + 1 << "/" << number;

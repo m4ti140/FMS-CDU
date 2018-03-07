@@ -17,7 +17,7 @@ extern std::vector<Navaid>fixes_db;
 
 int navdata_parser(int mode = 0, std::string search = "XXXXX", Navaid* ret = NULL, std::ifstream* curNavFile = NULL);
 
-class Route
+class Route			//unused
 {
 public:
 	Route();
@@ -95,7 +95,7 @@ public:
 	Navaid waypoint;		//target waypoint object
 	Airway segment;			//airway object to fly via
 	std::string airway_id;	//airway id string for pathfinder/route page display
-	int restriction;		//altitude restrictionactual altitude to fly at
+	int restriction;		//altitude restriction
 	Rel restrict_rel;		//below/above/exact
 	int	elevation;			//actual altitude to fly at
 	float distance;			//distance to waypoint along the route

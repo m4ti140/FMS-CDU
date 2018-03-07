@@ -140,7 +140,6 @@ std::istream& operator>>(std::istream& is, Navaid& data)
 
 	//3   9.037802778    7.285102778     1191    11630   130     -2.000  ABC ENRT DN ABUJA VOR/DME
 
-	
 	is >> ttype;
 	if (ttype > 16)
 	{
@@ -154,22 +153,6 @@ std::istream& operator>>(std::istream& is, Navaid& data)
 	data.name = buf.str();
 	data.type = static_cast<NavTypeNew>(ttype);
 
-	//debug
-	/*
-	std::ofstream out;
-	out.open("debug.log", std::ios::out);
-	out << "type: " << data.type << std::endl;
-	out << "coordinates: " << data.lon << " " << data.lat << std::endl;
-	out << "elevation: " << data.elev << std::endl;
-	out << "frequency: " << data.freq << std::endl;
-	out << "range: " << data.range << std::endl;
-	out << "heading: " << data.heading << std::endl;
-	out << "ID: " << data.id << std::endl;
-	out << "Regional ID: " << data.regid << std::endl;
-	out << "Region: " << data.reg <<std::endl;
-	out << "Name: " << data.name;
-	out.close();
-	*/
 	return is;
 
 }
