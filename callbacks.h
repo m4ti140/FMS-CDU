@@ -572,9 +572,9 @@ namespace floop
 		float beta;
 		float dist;
 
-		aircraft.next_heading = great_circle_in(p1, p2);  //calculate great circle bearing to next waypoint
+		aircraft.next_heading = great_circle_out(p1, p2);  //calculate great circle bearing to next waypoint
 
-		dist = great_circle_in(p1, p2);  //calculate great circle distance to next waypoint
+		dist = great_circle_distance(p1, p2);  //calculate great circle distance to next waypoint
 
 		active_flightplan.legs.front().distance = dist;
 
@@ -708,7 +708,7 @@ namespace floop
 
 	float turn(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 	{
-		if (lnav == false) return 0.5;
+		
 		if (active_flightplan.legs.size() <= 1) return 0.5;
 
 		float disttoturnstart, vg;

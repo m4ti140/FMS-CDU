@@ -1,7 +1,6 @@
 #include "Aircraft.h"
 
 
-
 void Azimuth::Trim()
 {
 	if (_mode == deg)		//for degrees: add/subtract 360 degrees

@@ -7,7 +7,7 @@
 #define PI 3.14159265
 #define RAD *PI/180.
 #define DEG *180./PI
-#define R1 6371.0088
+#define R1 3440.0695
 
 class Azimuth
 {
@@ -22,11 +22,6 @@ protected:
 	Unit _mode;
 	void Trim();
 public:
-	typedef enum
-	{
-		deg = 0,
-		rad = 1
-	}Unit;
 
 	Azimuth() : _heading(0.), _mode(deg) {}
 	Azimuth(Unit mode) : _heading(0.), _mode(mode) {}
