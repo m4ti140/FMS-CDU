@@ -1,46 +1,68 @@
-﻿LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
+﻿  Aircraft.cpp
+Aircraft.cpp(13): warning C4305: '+=': truncation from 'double' to 'float'
+Aircraft.cpp(14): warning C4305: '-=': truncation from 'double' to 'float'
+Aircraft.cpp(21): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(27): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(47): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(150): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(151): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(152): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(153): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(163): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(164): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(167): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+Aircraft.cpp(168): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Data.cpp
+  Navaid.cpp
+  Page.cpp
+Page.cpp(96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Page.cpp(112): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Page.cpp(121): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Page.cpp(122): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Pages.cpp
+  Route.cpp
+Route.cpp(319): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(319): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+Route.cpp(320): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(320): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+Route.cpp(511): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(863): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(878): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+Route.cpp(1070): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  scratchpad.cpp
+scratchpad.cpp(110): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Screen.cpp
+  xpln.cpp
+f:\fms-cdu\geomath.h(22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\geomath.h(75): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(544): warning C4305: 'return': truncation from 'double' to 'float'
+f:\fms-cdu\callbacks.h(558): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(559): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(637): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+f:\fms-cdu\callbacks.h(642): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+f:\fms-cdu\callbacks.h(724): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(741): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\callbacks.h(778): warning C4305: '*=': truncation from 'double' to 'float'
+f:\fms-cdu\callbacks.h(794): warning C4305: '*=': truncation from 'double' to 'float'
+f:\fms-cdu\callbacks.h(946): warning C4101: 'elevation': unreferenced local variable
+f:\fms-cdu\callbacks.h(986): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\callbacks.h(1128): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+xpln.cpp(388): warning C4101: 'pos': unreferenced local variable
+xpln.cpp(542): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
+xpln.cpp(644): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+xpln.cpp(645): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+xpln.cpp(646): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+xpln.cpp(683): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
+xpln.cpp(683): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
+  widgetids.cpp
+LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
      Creating library F:\FMS-CDU\x64\Release\win.lib and object F:\FMS-CDU\x64\Release\win.exp
   Generating code
-LINK : fatal error C1001: An internal error has occurred in the compiler.
-  (compiler file 'f:\dd\vctools\compiler\utc\src\p2\main.c', line 258)
-   To work around this problem, try simplifying or changing the program near the locations listed above.
-  Please choose the Technical Support command on the Visual C++ 
-   Help menu, or open the Technical Support help file for more information
-    link!InvokeCompilerPass()+0x2523e
-    link!InvokeCompilerPass()+0x2523e
-    link!InvokeCompilerPass()+0x1ec2e
-    link!DllGetC2Telemetry()+0xd853a
-  
-LINK : fatal error C1001: An internal error has occurred in the compiler.
-  (compiler file 'f:\dd\vctools\compiler\utc\src\p2\main.c', line 258)
-   To work around this problem, try simplifying or changing the program near the locations listed above.
-  Please choose the Technical Support command on the Visual C++ 
-   Help menu, or open the Technical Support help file for more information
-    link!InvokeCompilerPass()+0x2523e
-    link!InvokeCompilerPass()+0x1ec2e
-    link!DllGetC2Telemetry()+0xd853a
-  
-  
-LINK : fatal error LNK1000: Internal error during IMAGE::BuildImage
-  
-    Version 14.12.25835.0
-  
-    ExceptionCode            = C0000005
-    ExceptionFlags           = 00000000
-    ExceptionAddress         = 043020AC (03EC0000) "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.12.25827\bin\HostX86\x64\c2.dll"
-    NumberParameters         = 00000002
-    ExceptionInformation[ 0] = 00000000
-    ExceptionInformation[ 1] = FFFFFFFC
-  
-  CONTEXT:
-    Eax    = 00000000  Esp    = 006FE3E0
-    Ebx    = 00000000  Ebp    = 006FE418
-    Ecx    = 00000000  Esi    = 076BAE94
-    Edx    = 068EB1EC  Edi    = 04DBC70C
-    Eip    = 043020AC  EFlags = 00010206
-    SegCs  = 00000023  SegDs  = 0000002B
-    SegSs  = 0000002B  SegEs  = 0000002B
-    SegFs  = 00000053  SegGs  = 0000002B
-    Dr0    = 00000000  Dr3    = 00000000
-    Dr1    = 00000000  Dr6    = 00000000
-    Dr2    = 00000000  Dr7    = 00000000
+  Finished generating code
+  FMS-CDU.vcxproj -> F:\FMS-CDU\x64\Release\win.xpl
+  F:\FMS-CDU\x64\Release\win.xpl
+  1 File(s) copied
