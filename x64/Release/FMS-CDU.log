@@ -1,37 +1,37 @@
 ﻿  Aircraft.cpp
-Aircraft.cpp(13): warning C4305: '+=': truncation from 'double' to 'float'
-Aircraft.cpp(14): warning C4305: '-=': truncation from 'double' to 'float'
-Aircraft.cpp(21): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(27): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(47): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(150): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(151): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(152): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(153): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(163): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(164): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(167): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-Aircraft.cpp(168): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(14): warning C4305: '+=': truncation from 'double' to 'float'
+f:\fms-cdu\aircraft.cpp(15): warning C4305: '-=': truncation from 'double' to 'float'
+f:\fms-cdu\aircraft.cpp(24): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(30): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(50): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(153): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(154): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(155): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(156): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(166): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(167): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(170): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+f:\fms-cdu\aircraft.cpp(171): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Data.cpp
   Navaid.cpp
   Page.cpp
-Page.cpp(96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-Page.cpp(112): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-Page.cpp(121): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-Page.cpp(122): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\page.cpp(96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\page.cpp(112): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\page.cpp(121): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\page.cpp(122): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   Pages.cpp
   Route.cpp
-Route.cpp(319): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-Route.cpp(319): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-Route.cpp(320): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-Route.cpp(320): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-Route.cpp(511): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-Route.cpp(863): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-Route.cpp(878): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-Route.cpp(1070): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\route.cpp(319): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\route.cpp(319): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+f:\fms-cdu\route.cpp(320): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\route.cpp(320): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+f:\fms-cdu\route.cpp(511): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\route.cpp(863): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\route.cpp(878): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\route.cpp(1070): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   scratchpad.cpp
-scratchpad.cpp(110): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\fms-cdu\scratchpad.cpp(110): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Screen.cpp
   xpln.cpp
 f:\fms-cdu\geomath.h(22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
@@ -48,16 +48,16 @@ f:\fms-cdu\callbacks.h(794): warning C4305: '*=': truncation from 'double' to 'f
 f:\fms-cdu\callbacks.h(946): warning C4101: 'elevation': unreferenced local variable
 f:\fms-cdu\callbacks.h(986): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 f:\fms-cdu\callbacks.h(1128): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-xpln.cpp(388): warning C4101: 'pos': unreferenced local variable
-xpln.cpp(542): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
-xpln.cpp(644): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
-xpln.cpp(645): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
-xpln.cpp(646): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
-xpln.cpp(683): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
-xpln.cpp(683): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
+f:\fms-cdu\xpln.cpp(388): warning C4101: 'pos': unreferenced local variable
+f:\fms-cdu\xpln.cpp(542): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
+f:\fms-cdu\xpln.cpp(645): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+f:\fms-cdu\xpln.cpp(646): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+f:\fms-cdu\xpln.cpp(647): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+f:\fms-cdu\xpln.cpp(684): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
+f:\fms-cdu\xpln.cpp(684): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
   widgetids.cpp
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
      Creating library F:\FMS-CDU\x64\Release\win.lib and object F:\FMS-CDU\x64\Release\win.exp

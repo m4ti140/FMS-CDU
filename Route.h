@@ -15,7 +15,7 @@ extern std::vector<Navaid>airport_db;
 extern std::vector<Navaid>nodes_db;
 extern std::vector<Navaid>fixes_db;
 
-int navdata_parser(int mode = 0, std::string search = "XXXXX", Navaid* ret = NULL, std::ifstream* curNavFile = NULL);
+int navdata_parser(int mode = 0, std::string search = "-----", Navaid* ret = NULL, std::ifstream* curNavFile = NULL);
 
 class Route			//unused
 {

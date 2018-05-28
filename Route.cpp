@@ -982,14 +982,14 @@ bool Flightplan::AddWaypoint(Navaid wp, int index)     //don't call without dest
 
 void Flightplan::DelAirway(int index, bool forget)
 {
-	index = FindWpIndex(index);
-	legs[index].segment = direct;
+	int wp_index = FindWpIndex(index);
+	legs[wp_index].segment = direct;
 
 	//erase airway_id when completely deleteing
-	if(forget)legs[index].airway_id = direct.name;	
+	if(forget)legs[wp_index].airway_id = direct.name;	
 
 	//go up the path and delete subsequent legs until reaching the next waypoint
-	for (int i = index - 1; legs[i].isWaypoint() == false; i--)
+	if(wp_index>=1)for (int i = wp_index - 1; legs[i].isWaypoint() == false; i--)
 	{
 		legs.erase(legs.begin() + i);		
 	}
@@ -1154,17 +1154,7 @@ void Flightplan::CheckContinuity()
 			}
 			else
 			{
-				//check if entry missing
-				Navaid* check = legs[i].segment.GetExit(legs[i - 1].waypoint);
-				if (*check != legs[i].waypoint)
-				{
-					discont = true;
-					legs[i].SetDiscont();
-				}
-				else
-				{
-					legs[i].SetCont();
-				}
+				legs[i].SetCont();
 			}
 		}
 	}

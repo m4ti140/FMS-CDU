@@ -601,13 +601,13 @@ namespace floop
 				if (segdir == 'F')
 				{
 					Coord p0(active_flightplan.legs.front().segment.entry->lat, active_flightplan.legs.front().segment.entry->lon);
-					aircraft.prev_heading = great_circle_out(p0, p1);
+					aircraft.prev_heading = great_circle_in(p0, p1);
 				}
 
 				if (segdir == 'B')
 				{
 					Coord p0(active_flightplan.legs.front().segment.exit->lat, active_flightplan.legs.front().segment.exit->lon);
-					aircraft.prev_heading = great_circle_out(p0, p1);
+					aircraft.prev_heading = great_circle_in(p0, p1);
 				}
 
 				if (segdir == 'N')
@@ -615,12 +615,12 @@ namespace floop
 					if (active_flightplan.legs.front().segment.entry->name == active_flightplan.legs.front().waypoint.name)
 					{
 						Coord p0(active_flightplan.legs.front().segment.exit->lat, active_flightplan.legs.front().segment.exit->lon);
-						aircraft.prev_heading = great_circle_out(p0, p1);
+						aircraft.prev_heading = great_circle_in(p0, p1);
 					}
 					else
 					{
 						Coord p0(active_flightplan.legs.front().segment.entry->lat, active_flightplan.legs.front().segment.entry->lon);
-						aircraft.prev_heading = great_circle_out(p0, p1);
+						aircraft.prev_heading = great_circle_in(p0, p1);
 					}
 				}
 
@@ -1173,6 +1173,7 @@ namespace fmf
 		}
 	}
 
+
 	void activate_flightplan()
 	{
 		//check if origin and destination are present
@@ -1207,10 +1208,166 @@ namespace fmf
 		XPLMSetFlightLoopCallbackInterval(floop::updatenextleg, -3, 1, NULL);
 		XPLMSetFlightLoopCallbackInterval(floop::legsUpdate, -4, 1, NULL);
 		//XPLMSetFlightLoopCallbackInterval(floop::distancesUpdate, -5, 1, NULL);
-		XPLMSetFlightLoopCallbackInterval(floop::turn, -6, 1, NULL);
+		//XPLMSetFlightLoopCallbackInterval(floop::turn, -6, 1, NULL);
 
 		pagechange = true;
 
 	}
+
+	bool read_route(std::ifstream &file)
+	{
+#ifdef _DEBUG
+		std::ofstream debug;
+		debug.open("FMSdebug.txt", std::ios_base::app);
+#endif
+		std::string sbuf, sorigin, sdest;
+		std::vector<std::string>sroute;
+		file >> sorigin;
+		while (file>>sbuf)
+		{
+			sroute.push_back(sbuf);
+		}
+		sdest = sroute.back();
+		sroute.pop_back();
+
+		//check data integrity
+#ifdef _DEBUG
+		debug << "fmf::read_route: checking data integrity" << std::endl;
+#endif 
+
+		if (sroute.size() % 2 == 0) return 0; //list length
+
+#ifdef _DEBUG
+		debug << "fmf::read_route: list length checked" << std::endl;
+#endif 
+
+		//check if airports exist
+		XPLMNavRef ap = XPLMFindNavAid(NULL, sorigin.c_str(), NULL, NULL, NULL, xplm_Nav_Airport);
+		if (ap == XPLM_NAV_NOT_FOUND) return 0;
+		Navaid orig(ap);
+		ap = XPLMFindNavAid(NULL, sdest.c_str(), NULL, NULL, NULL, xplm_Nav_Airport);
+		if (ap == XPLM_NAV_NOT_FOUND) return 0;
+		Navaid dest(ap);
+
+#ifdef _DEBUG
+		debug << "fmf::read_route: origin/destination valid" << std::endl;
+#endif 
+
+		//check path
+		if (sroute.front() != "SID" && sroute.front() != "DIRECT" && sroute.front() != "DCT") return 0;
+		if (sroute.back() != "STAR" && sroute.back() != "DIRECT" && sroute.back() != "DCT") return 0;
+
+#ifdef _DEBUG
+		debug << "fmf::read_route: path start valid" << std::endl;
+#endif 
+
+		//enter route into buffer Flightplan object;
+
+		bool check = true;
+
+		Scratchpad buffer;
+		Flightplan bup;
+
+		bup = current_flightplan;
+		
+		current_flightplan.Wipe();
+
+		buffer.cont = sorigin;
+		select_origin(Page::l_lsk_1, &buffer, &route);
+		buffer.cont = sdest;
+		select_destination(Page::r_lsk_1, &buffer, &route);
+		activate_flightplan();
+
+		for (int i = 1; i < sroute.size() - 1; i++)
+		{
+			buffer.cont = sroute[i];
+			if (i % 2 == 1)
+			{
+				select_waypoint(route.ListLSK((i/2), 1), &buffer, &route);
+			}
+			if (i % 2 == 0)
+			{
+				if(buffer.cont != "SID" && buffer.cont != "DIRECT" && buffer.cont != "DCT" && buffer.cont != "STAR") 
+					select_airway(route.ListLSK((i / 2), 0), &buffer, &route);
+			}
+		}
+
+		if (check == false)
+		{
+#ifdef _DEBUG
+			debug << "fmf::read_route: failed, restoring backup" << std::endl;
+#endif 
+			current_flightplan = bup;
+		}
+
+#ifdef _DEBUG
+		debug << "fmf::read_route: route loading succesful" << std::endl;
+#endif 
+
+		pagechange = true;
+
+		return check;
+	}
+
+	bool write_route(std::ofstream &file)
+	{
+		if (!file.good())return false;
+		file << current_flightplan.origin.id << " ";
+		for (int i = 0; i < current_flightplan.legs.size(); i++)
+		{
+			if(current_flightplan.legs[i].isWaypoint()) file << current_flightplan.legs[i].airway_id << " " << current_flightplan.legs[i].waypoint.id << " ";
+		}
+		file << "DIRECT " << current_flightplan.destination.id;
+		if (!file.good()) return false;
+		else return true;
+	}
+
+	Page* route_storage(int select, void* input, Page* output)
+	{
+		//check input
+		Scratchpad *edit;
+		edit = static_cast<Scratchpad*>(input);
+		char system_path[512];
+		XPLMGetSystemPath(system_path);
+		SetCurrentDirectoryA(system_path);
+		std::ostringstream filepath;
+
+		if (edit->cont.empty()) return NULL;
+		else
+		{
+			//look for the file name
+			filepath << ".\\Output\\FMS plans\\" << edit->cont << ".txt";
+			std::ifstream file;
+			file.open(filepath.str(), std::ios::in);
+			if (file)
+			{
+				if(read_route(file)==false) edit->Error("READ ERROR");
+				else route.cont[0].LMod(Screen::_l2, edit->cont);
+				file.close();
+				pagechange = true;
+				return NULL;
+			}
+			else //if not found write a new one
+			{
+				std::ofstream fileout;
+				fileout.open(filepath.str(), std::ios::out);
+				if (fileout)
+				{
+					if (write_route(fileout) == false) edit->Error("WRITE ERROR");
+					else route.cont[0].LMod(Screen::_l2, edit->cont);
+					file.close();
+					pagechange = true;
+					return NULL;
+				}
+				else
+				{
+					edit->Error("FILE SYSTEM ERROR");
+					return NULL;
+				}
+			}
+		}
+		
+	}
+
 }
 

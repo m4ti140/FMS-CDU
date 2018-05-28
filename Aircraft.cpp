@@ -3,16 +3,19 @@
 
 void Azimuth::Trim()
 {
-	if (_mode == deg)		//for degrees: add/subtract 360 degrees
-	{		
+	if (_mode == deg)		//for degrees: constrain to modulo 360
+	{
 		while (_heading < 0.) _heading += 360.;
 		while (_heading > 360.) _heading -= 360.;
+		//_heading = fmod(_heading, 360.);
 	}
-	if (_mode == rad)		//for radians: add/subtract 2pi radians
+	if (_mode == rad)		//for radians: constrain to modulo 2pi
 	{
-		while (_heading < 0.) _heading += 6.28318;
-		while (_heading > 6.28318) _heading -= 6.28318;
+		while (_heading < 0.) _heading += (2.*PI);
+		while (_heading > (2.*PI)) _heading -= (2.*PI);
+		//_heading = fmod(_heading, (2. * PI));
 	}
+
 }
 
 float Azimuth::GetDeg()

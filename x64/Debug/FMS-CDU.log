@@ -15,14 +15,14 @@ f:\fms-cdu\callbacks.h(986): warning C4267: 'initializing': conversion from 'siz
 f:\fms-cdu\callbacks.h(1128): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 f:\fms-cdu\xpln.cpp(388): warning C4101: 'pos': unreferenced local variable
 f:\fms-cdu\xpln.cpp(542): warning C4566: character represented by universal-character-name '\u25A1' cannot be represented in the current code page (1250)
-f:\fms-cdu\xpln.cpp(644): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
 f:\fms-cdu\xpln.cpp(645): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
 f:\fms-cdu\xpln.cpp(646): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
-f:\fms-cdu\xpln.cpp(683): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
-f:\fms-cdu\xpln.cpp(683): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
+f:\fms-cdu\xpln.cpp(647): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(132): note: see declaration of 'strcpy'
+f:\fms-cdu\xpln.cpp(684): warning C4311: 'reinterpret_cast': pointer truncation from 'void *' to 'int'
+f:\fms-cdu\xpln.cpp(684): warning C4302: 'reinterpret_cast': truncation from 'void *' to 'int'
   FMS-CDU.vcxproj -> F:\FMS-CDU\x64\Debug\win.xpl
   F:\FMS-CDU\x64\Debug\win.xpl
   1 File(s) copied

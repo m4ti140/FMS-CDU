@@ -560,8 +560,8 @@ void initialize_interface()
 		"                  RTE|1/1",
 		"ORIGIN|DEST",
 		"----|----",
-		" |FLT NO.",
-		" |--------",
+		"CO-ROUTE|FLT NO.",
+		"--------|--------",
 		"RUNWAY",
 		"---",
 		"",
@@ -575,6 +575,7 @@ void initialize_interface()
 	route = RoutePage(buffs);
 	route.AddCb(Page::l_lsk_1, 0, fmf::select_origin);
 	route.AddCb(Page::r_lsk_1, 0, fmf::select_destination);
+	route.AddCb(Page::l_lsk_2, 0, fmf::route_storage);
 	//route.AddField(Page::r_lsk_2, 0, "--------");
 	//route.AddField(Page::l_lsk_3, 0, "---");
 	
