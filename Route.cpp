@@ -1,4 +1,24 @@
-﻿#pragma once
+﻿//Copyright(c) 2018 Mateusz Brzozowski
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy
+//of this software and associated documentation files(the "Software"), to deal
+//in the Software without restriction, including without limitation the rights
+//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//copies of the Software, and to permit persons to whom the Software is
+//furnished to do so, subject to the following conditions :
+//
+//The above copyright notice and this permission notice shall be included in all
+//copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//SOFTWARE.
+
+#pragma once
 #include "Route.h"
 
 std::vector<Navaid>airport_db;
@@ -833,7 +853,8 @@ std::string Flightplan::GetOrigName()
 void Flightplan::Next()
 {
 	if (!_enroute) _enroute = true;
-	legs.pop_front();
+	if (legs.size() <= 1) return;
+	else legs.pop_front();
 }
 
 bool Flightplan::IsAirwaySelected(int index)   //returns whether or not the airway has been selected for the current segment.
@@ -994,6 +1015,8 @@ void Flightplan::DelAirway(int index, bool forget)
 		legs.erase(legs.begin() + i);		
 	}
 
+	if (legs[wp_index].waypoint == discont_nav) legs.erase(legs.begin() + wp_index);
+
 	CheckContinuity();
 }
 
@@ -1007,7 +1030,7 @@ void Flightplan::DelWaypoint(int index)
 	else
 	{
 		legs[wp_index].waypoint = discont_nav;
-		DelAirway(wp_index, false);				//else erase path to this waypoint
+		DelAirway(index, false);				//else erase path to this waypoint
 		if (FindWpIndex(index + 1) < legs.size()) DelAirway(FindWpIndex(index + 1));
 	}
 

@@ -1,3 +1,23 @@
+//Copyright(c) 2018 Mateusz Brzozowski
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy
+//of this software and associated documentation files(the "Software"), to deal
+//in the Software without restriction, including without limitation the rights
+//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//copies of the Software, and to permit persons to whom the Software is
+//furnished to do so, subject to the following conditions :
+//
+//The above copyright notice and this permission notice shall be included in all
+//copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//SOFTWARE.
+
 #pragma once
 //#include <windows.h>
 #include <stack>
@@ -667,7 +687,7 @@ namespace floop
 		//float lon12 = active_flightplan.legs[distindex].waypoint.lon RAD - active_flightplan.legs[distindex - 1].waypoint.lon RAD;
 
 		if(refreshed_once == false)active_flightplan.legs[distindex].heading = great_circle_in(p1, p2);
-		active_flightplan.legs[distindex].distance = active_flightplan.legs[distindex - 1].distance + great_circle_distance(p1, p2);
+		active_flightplan.legs[distindex].distance = great_circle_distance(p1, p2);
 
 		distindex++;
 
@@ -676,6 +696,7 @@ namespace floop
 
 	float legsUpdate(float elapsedMe, float elapsedSim, int counter, void* inRefcon)
 	{
+		legs = legs_bup;
 		legs.RefreshList(active_flightplan.legs);
 		pagechange = true;
 		return 2.0;
@@ -713,13 +734,15 @@ namespace floop
 
 		float disttoturnstart, vg;
 		Azimuth nextturn;
-		int bank = XPLMGetDatai(df::heading_roll_mode);
+		int bank = 30;
 		if (bank = 0)
 		{
 			XPLMSetDatai(df::heading_roll_mode, 30);
 			bank = 30;
 		}
 		vg = XPLMGetDataf(df::groundspeed);
+
+		if (vg < 5.) return 0.5;
 
 		float turnrad = vg*vg / (68417.1112*tan(bank RAD));
 
@@ -729,7 +752,7 @@ namespace floop
 
 		if (dif > 150)
 		{
-			if (active_flightplan.legs.front().distance < 5)
+			if (active_flightplan.legs.front().distance < 0.1)
 			{
 				active_flightplan.Next();
 				current_flightplan.Next();
@@ -740,13 +763,15 @@ namespace floop
 
 		disttoturnstart = tan(0.5*dif)*turnrad;
 
-		if (disttoturnstart < active_flightplan.legs.front().distance)
+		if (disttoturnstart < 5.) disttoturnstart = 5.;
+
+		if (disttoturnstart > active_flightplan.legs.front().distance)
 		{
 			active_flightplan.Next();
 			current_flightplan.Next();
 		}
 
-		return 0.5;
+		return 0.1;
 
 	}
 
@@ -1002,7 +1027,13 @@ namespace fmf
 		if (edit->isDel())	//if the scratchpad is in delete mode, delete instead
 		{
 			current_flightplan.DelWaypoint(index);
+			int curpos = route.GetSubpage();
+			route.SetPage(0);
+			while (route.cont.size() > 1)route.DelPage();
+			add_route_page();
 			route.RefreshList(current_flightplan.legs);
+			if (curpos < route.cont.size())route.SetPage(curpos);
+			else route.SetLastPage();
 			execute = activate_flightplan;
 			pagechange = true;
 			return NULL;
@@ -1076,7 +1107,13 @@ namespace fmf
 		if (edit->isDel())
 		{
 			current_flightplan.DelAirway(index);
+			int curpos = route.GetSubpage();
+			route.SetPage(0);
+			while (route.cont.size() > 1)route.DelPage();
+			add_route_page();
 			route.RefreshList(current_flightplan.legs);
+			if (curpos < route.cont.size())route.SetPage(curpos);
+			else route.SetLastPage();
 			execute = activate_flightplan;
 			pagechange = true;
 			return NULL;
@@ -1208,7 +1245,7 @@ namespace fmf
 		XPLMSetFlightLoopCallbackInterval(floop::updatenextleg, -3, 1, NULL);
 		XPLMSetFlightLoopCallbackInterval(floop::legsUpdate, -4, 1, NULL);
 		//XPLMSetFlightLoopCallbackInterval(floop::distancesUpdate, -5, 1, NULL);
-		//XPLMSetFlightLoopCallbackInterval(floop::turn, -6, 1, NULL);
+		XPLMSetFlightLoopCallbackInterval(floop::turn, -6, 1, NULL);
 
 		pagechange = true;
 
@@ -1232,13 +1269,13 @@ namespace fmf
 
 		//check data integrity
 #ifdef _DEBUG
-		debug << "fmf::read_route: checking data integrity" << std::endl;
+		debug << "fmf::read_route:	checking data integrity" << std::endl;
 #endif 
 
 		if (sroute.size() % 2 == 0) return 0; //list length
 
 #ifdef _DEBUG
-		debug << "fmf::read_route: list length checked" << std::endl;
+		debug << "fmf::read_route:	list length checked" << std::endl;
 #endif 
 
 		//check if airports exist
@@ -1250,7 +1287,7 @@ namespace fmf
 		Navaid dest(ap);
 
 #ifdef _DEBUG
-		debug << "fmf::read_route: origin/destination valid" << std::endl;
+		debug << "fmf::read_route:	origin/destination valid" << std::endl;
 #endif 
 
 		//check path
@@ -1258,7 +1295,7 @@ namespace fmf
 		if (sroute.back() != "STAR" && sroute.back() != "DIRECT" && sroute.back() != "DCT") return 0;
 
 #ifdef _DEBUG
-		debug << "fmf::read_route: path start valid" << std::endl;
+		debug << "fmf::read_route:	path start valid" << std::endl;
 #endif 
 
 		//enter route into buffer Flightplan object;
@@ -1277,31 +1314,38 @@ namespace fmf
 		buffer.cont = sdest;
 		select_destination(Page::r_lsk_1, &buffer, &route);
 		activate_flightplan();
-
+		int stpage = route.GetSubpage();
+		route.SetPage(1);
 		for (int i = 1; i < sroute.size() - 1; i++)
 		{
 			buffer.cont = sroute[i];
 			if (i % 2 == 1)
 			{
-				select_waypoint(route.ListLSK((i/2), 1), &buffer, &route);
+#ifdef _DEBUG
+				debug << "fmf::read_route:	i=" << i << std::endl;
+#endif 
+				select_waypoint(route.ListLSK((i / 2), 1), &buffer, &route);
 			}
 			if (i % 2 == 0)
 			{
+#ifdef _DEBUG
+				debug << "fmf::read_route:	i=" << i << std::endl;
+#endif 
 				if(buffer.cont != "SID" && buffer.cont != "DIRECT" && buffer.cont != "DCT" && buffer.cont != "STAR") 
 					select_airway(route.ListLSK((i / 2), 0), &buffer, &route);
 			}
 		}
-
+		route.SetPage(stpage);
 		if (check == false)
 		{
 #ifdef _DEBUG
-			debug << "fmf::read_route: failed, restoring backup" << std::endl;
+			debug << "fmf::read_route:	failed, restoring backup" << std::endl;
 #endif 
 			current_flightplan = bup;
 		}
 
 #ifdef _DEBUG
-		debug << "fmf::read_route: route loading succesful" << std::endl;
+		debug << "fmf::read_route:	route loading succesful" << std::endl;
 #endif 
 
 		pagechange = true;
@@ -1324,6 +1368,10 @@ namespace fmf
 
 	Page* route_storage(int select, void* input, Page* output)
 	{
+#ifdef _DEBUG
+		std::ofstream debug;
+		debug.open("FMSdebug.txt", std::ios_base::app);
+#endif
 		//check input
 		Scratchpad *edit;
 		edit = static_cast<Scratchpad*>(input);
@@ -1336,37 +1384,72 @@ namespace fmf
 		else
 		{
 			//look for the file name
+#ifdef _DEBUG
+			debug << "fmf::route storage:	loc 1: scratchpad.cont:" << edit->cont << std::endl;
+#endif
 			filepath << ".\\Output\\FMS plans\\" << edit->cont << ".txt";
 			std::ifstream file;
+#ifdef _DEBUG
+			debug << "fmf::route storage:	loc 2: scratchpad.cont:" << edit->cont << std::endl;
+#endif
 			file.open(filepath.str(), std::ios::in);
 			if (file)
 			{
+#ifdef _DEBUG
+				debug << "fmf::route storage:	loc 3: scratchpad.cont:" << edit->cont << std::endl;
+#endif
+				std::string namestore = edit->cont;
 				if(read_route(file)==false) edit->Error("READ ERROR");
-				else route.cont[0].LMod(Screen::_l2, edit->cont);
+				else
+				{
+#ifdef _DEBUG
+					debug << "fmf::route storage:	loc 4:scratchpad.cont:" << edit->cont << std::endl;
+#endif
+					route.cont[0].LMod(Screen::_l2, namestore);
+				}
 				file.close();
+				edit->Clear_All();
 				pagechange = true;
 				return NULL;
 			}
-			else //if not found write a new one
+			else //if not found display error
 			{
-				std::ofstream fileout;
-				fileout.open(filepath.str(), std::ios::out);
-				if (fileout)
-				{
-					if (write_route(fileout) == false) edit->Error("WRITE ERROR");
-					else route.cont[0].LMod(Screen::_l2, edit->cont);
-					file.close();
-					pagechange = true;
-					return NULL;
-				}
-				else
-				{
-					edit->Error("FILE SYSTEM ERROR");
-					return NULL;
-				}
+				edit->Error("ROUTE NOT FOUND");
+				return NULL;
 			}
 		}
 		
+	}
+	Page* save_file(int select, void* input, Page* output)
+	{
+		Scratchpad *edit;
+		edit = static_cast<Scratchpad*>(input);
+		char system_path[512];
+		XPLMGetSystemPath(system_path);
+		SetCurrentDirectoryA(system_path);
+		std::ostringstream filepath;
+
+		if (edit->cont.empty()) return NULL;
+		else
+		{
+			std::ofstream fileout;
+			filepath << ".\\Output\\FMS plans\\" << edit->cont << ".txt";
+			fileout.open(filepath.str(), std::ios::trunc); //always overwrite
+			if (fileout)
+			{
+				if (write_route(fileout) == false) edit->Error("WRITE ERROR");
+				else route.cont[0].LMod(Screen::_l2, edit->cont);
+				fileout.close();
+				edit->Clear_All();
+				pagechange = true;
+				return NULL;
+			}
+			else
+			{
+				edit->Error("FILE SYSTEM ERROR");
+				return NULL;
+			}
+		}
 	}
 
 }
