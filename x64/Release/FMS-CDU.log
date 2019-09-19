@@ -1,16 +1,1 @@
-﻿  Route.cpp
-f:\fms-cdu\route.cpp(339): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-f:\fms-cdu\route.cpp(339): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-f:\fms-cdu\route.cpp(340): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-f:\fms-cdu\route.cpp(340): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
-f:\fms-cdu\route.cpp(531): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-f:\fms-cdu\route.cpp(884): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-f:\fms-cdu\route.cpp(899): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-f:\fms-cdu\route.cpp(1093): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
-     Creating library F:\FMS-CDU\x64\Release\win.lib and object F:\FMS-CDU\x64\Release\win.exp
-  Generating code
-  Finished generating code
-  FMS-CDU.vcxproj -> F:\FMS-CDU\x64\Release\win.xpl
-  F:\FMS-CDU\x64\Release\win.xpl
-  1 File(s) copied
+﻿
