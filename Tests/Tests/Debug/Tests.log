@@ -1,4 +1,0 @@
-﻿  Tests.cpp
-f:\fms-cdu\geomath.h(22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-f:\fms-cdu\geomath.h(75): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  Tests.vcxproj -> F:\FMS-CDU\Tests\Debug\Tests.exe
