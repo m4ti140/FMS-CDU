@@ -1,0 +1,3 @@
+# FMS-CDU
+
+The purpose of this diploma project was to develop a general FMS simulation in the X-Plane 11 environment. It involved the design and programming of a dynamically linked library with the use of X-Plane SDK that simulated the basic informative, route management and lateral navigation functionality of a Flight Management Computer together with a simple UI imitating a Control Display Unit. While the interface is based on a general layout of the units installed in Boeing 737 series of aircraft, this plugin is designed as a universal tool that can used with any X-Plane based aircraft simulation, therefore most of its functionality was written from scratch to imitate capabilities of a real FMC in selected areas.
