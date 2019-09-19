@@ -30,8 +30,8 @@
 *.out
 *.app
 
-*/Tests
-*/Release
-*/Debug
-*/.vs
-*/x64
+/Tests/*
+/Release/*
+/Debug/*
+/.vs/*
+/x64/*
